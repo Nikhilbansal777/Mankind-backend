@@ -42,4 +42,10 @@ public interface ProductClient {
             @RequestParam BigDecimal newQuantity,
             @RequestParam Long userId,
             @RequestParam Long cartId);
+
+    @PostMapping("/inventory/{productId}/cart/convert")
+    ResponseEntity<InventoryResponseDTO> convertReservedToSold(
+            @PathVariable Long productId,
+            @RequestParam BigDecimal quantity,
+            @RequestParam Long orderId);
 } 

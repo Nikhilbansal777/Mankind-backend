@@ -28,7 +28,8 @@ public class SecurityConfig {
                         "http://localhost:8080",
                         "http://localhost:8081",
                         "http://localhost:8082",
-                        "http://localhost:8083"
+                        "http://localhost:8083",
+                        "http://localhost:8088"
                     ));
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                     config.setAllowedHeaders(Arrays.asList("*"));
@@ -57,13 +58,14 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.PATCH, "/api/v1/products/**").authenticated()
                         
                         // Protected endpoints (authentication required)
-                        .pathMatchers("/api/v1/users/**").hasRole("ADMIN")  // Admin endpoints
+                        .pathMatchers("/api/v1/users/**").authenticated()  // Admin endpoints - just require authentication
                         .pathMatchers("/api/v1/cart/**").authenticated()
                         .pathMatchers("/api/v1/wishlist/**").authenticated()
                         .pathMatchers("/api/v1/payments/**").authenticated()
                         .pathMatchers("/api/v1/admin/payments/**").authenticated()
                         .pathMatchers("/api/v1/notifications/**").authenticated()
                         .pathMatchers("/api/v1/coupons/**").authenticated()  // Coupon service requires authentication
+                        .pathMatchers("/api/v1/orders/**").authenticated()  // Order service requires authentication
                         
                         // Default: require authentication for any other endpoints
                         .anyExchange().authenticated()

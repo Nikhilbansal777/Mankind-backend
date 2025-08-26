@@ -327,4 +327,32 @@ public class InventoryService {
 
         return inventoryMapper.toResponseDTO(inventory);
     }
+
+    @Transactional
+    public InventoryResponseDTO convertReservedToSold(Long productId, BigDecimal quantity, Long orderId) {
+        Inventory inventory = inventoryRepository.findByProductId(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found for product: " + productId));
+
+        if (inventory.getReservedQuantity().compareTo(quantity) < 0) {
+            throw new IllegalStateException("Insufficient reserved stock to convert to sold");
+        }
+
+        // Move quantity from reserved to sold
+        inventory.setReservedQuantity(inventory.getReservedQuantity().subtract(quantity));
+        inventory.setSoldQuantity(inventory.getSoldQuantity().add(quantity));
+        inventory = inventoryRepository.save(inventory);
+
+        // Create inventory log for cart conversion
+        InventoryLog log = InventoryLog.builder()
+            .inventory(inventory)
+            .actionType(InventoryActionType.CART_CONVERT)
+            .quantity(quantity)
+            .description("Stock converted from reserved to sold for order")
+            .createdBy("CART_SERVICE")
+            .orderId(orderId)
+            .build();
+        inventoryLogRepository.save(log);
+
+        return inventoryMapper.toResponseDTO(inventory);
+    }
 } 

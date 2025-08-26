@@ -102,6 +102,28 @@ spring:
           filters:
             - RewritePath=/api/v1/notifications/(?<segment>.*), /notifications/${segment}
 
+        # Order service routes - admin routes first (more specific)
+        - id: admin-orders
+          uri: ${ORDER_SERVICE_URL:http://localhost:8088}
+          predicates:
+            - Path=/api/v1/admin/orders/**
+          filters:
+            - StripPrefix=3
+            
+        - id: orders-root
+          uri: ${ORDER_SERVICE_URL:http://localhost:8088}
+          predicates:
+            - Path=/api/v1/orders
+          filters:
+            - SetPath=/orders
+          
+        - id: orders
+          uri: ${ORDER_SERVICE_URL:http://localhost:8088}
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - RewritePath=/api/v1/orders/(?<segment>.*), /orders/${segment}
+
   security:
     oauth2:
       resourceserver:

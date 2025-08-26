@@ -181,6 +181,12 @@ You can choose your preferred method based on your needs. Docker is recommended 
       ./mvnw spring-boot:run
       ```
       
+      **Order Service (Port 8088):**
+      ```bash
+      cd order-service
+      ./mvnw spring-boot:run
+      ```
+      
       **Gateway Service (Port 8085):**
       ```bash
       cd mankind-gateway-service
@@ -208,6 +214,7 @@ Each service has its detailed documentation. Click on the service name to view i
 - [`wishlist-service/`](wishlist-service/README.md)
 - [`payment-service/`](payment-service/README.md)
 - [`coupon-service/`](coupon-service/README.md)
+- [`order-service/`](order-service/README.md)
 
 ------------
 
@@ -317,6 +324,7 @@ Each service has its detailed documentation. Click on the service name to view i
 - [`wishlist-service/`](wishlist-service/README.md)
 - [`payment-service/`](payment-service/README.md)
 - [`coupon-service/`](coupon-service/README.md)
+- [`order-service/`](order-service/README.md)
 
 ------------------
 
@@ -355,6 +363,7 @@ mankind-backend/
 ├── wishlist-service/     # Handles wishlist functionality
 ├── payment-service/      # Handles payment processing functionality
 ├── coupon-service/       # Handles discount & coupon management
+├── order-service/        # Handles order management & tracking
 ├── user-api/            # Shared DTOs and interfaces for user-service
 ├── product-api/         # Shared DTOs and interfaces for product-service
 ├── docs/                 # Documentation

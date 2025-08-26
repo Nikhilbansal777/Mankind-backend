@@ -1,0 +1,92 @@
+server:
+  port: 8088
+  shutdown: graceful
+  tomcat:
+    threads:
+      max: 20
+      min-spare: 5
+    connection-timeout: 20000
+    max-connections: 100
+    accept-count: 10
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+  show-actuator: false
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+  packages-to-scan: com.mankind.matrix_order_service.controller
+  paths-to-match: /**
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mankind_matrix_db}?connectTimeout=${DB_CONNECT_TIMEOUT:60000}&socketTimeout=${DB_SOCKET_TIMEOUT:60000}&useSSL=${DB_USE_SSL:false}&allowPublicKeyRetrieval=${DB_ALLOW_PUBLIC_KEY_RETRIEVAL:true}&serverTimezone=${DB_SERVER_TIMEZONE:UTC}&autoReconnect=${DB_AUTO_RECONNECT:true}&failOverReadOnly=${DB_FAIL_OVER_READ_ONLY:false}
+    username: ${DB_USERNAME:matrix_user}
+    password: ${DB_PASSWORD:matrix_pass}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: ${DB_HIKARI_CONNECTION_TIMEOUT:20000}
+      maximum-pool-size: ${DB_HIKARI_MAX_POOL_SIZE:2}
+      minimum-idle: ${DB_HIKARI_MIN_IDLE:0}
+      idle-timeout: ${DB_HIKARI_IDLE_TIMEOUT:120000}
+      max-lifetime: ${DB_HIKARI_MAX_LIFETIME:300000}
+      leak-detection-threshold: ${DB_HIKARI_LEAK_DETECTION_THRESHOLD:30000}
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+      auto-commit: true
+      allow-pool-suspension: false
+      register-mbeans: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URL:http://localhost:8180}/realms/mankind
+          jwk-set-uri: ${KEYCLOAK_URL:http://localhost:8180}/realms/mankind/protocol/openid-connect/certs
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    properties:
+      hibernate:
+        connection:
+          provider_disables_autocommit: false
+        format_sql: true
+        current_session_context_class: thread
+        transaction:
+          auto_commit: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+  profiles:
+    active: dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+# Service URLs for Feign clients
+USER_SERVICE_URL: http://localhost:8081
+CART_SERVICE_URL: http://localhost:8082
+COUPON_SERVICE_URL: http://localhost:8087
+PRODUCT_SERVICE_URL: http://localhost:8080

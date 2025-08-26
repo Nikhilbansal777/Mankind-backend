@@ -75,4 +75,17 @@ public class CartController {
             @Parameter(description = "ID of the product to remove", required = true) @PathVariable Long productId) {
         return ResponseEntity.ok(cartService.removeItemFromCart(productId));
     }
+
+    @Operation(summary = "Mark cart as converted", description = "Marks the current user's cart as CONVERTED when an order is created. Used by order service. Access via /api/v1/cart/convert through the gateway.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Cart marked as converted successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - JWT required"),
+        @ApiResponse(responseCode = "404", description = "Cart not found")
+    })
+    @PostMapping("/convert")
+    public ResponseEntity<CartResponseDTO> markCartAsConverted(
+            @Parameter(description = "Order ID associated with the cart conversion", required = true) 
+            @RequestParam("orderId") Long orderId) {
+        return ResponseEntity.ok(cartService.markCartAsConverted(orderId));
+    }
 }

@@ -259,6 +259,7 @@
         .payment-icon { background: linear-gradient(45deg, #10ac84, #00d2d3); }
         .notification-icon { background: linear-gradient(45deg, #ff9f43, #feca57); }
         .coupon-icon { background: linear-gradient(45deg, #ff9ff3, #f368e0); }
+        .order-icon { background: linear-gradient(45deg, #2ecc71, #27ae60); }
 
         .service-title {
             font-size: 1.6rem;
@@ -712,6 +713,40 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Order Service -->
+            <div class="service-card">
+                <div class="service-header">
+                    <div class="service-icon order-icon">📋</div>
+                    <div>
+                        <h2 class="service-title">Order Service</h2>
+                        <div class="service-badges">
+                            <span class="badge badge-online">Online</span>
+                            <span class="badge badge-secured">Secured</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="service-description">
+                    Complete order lifecycle management including order creation from carts, coupon application, 
+                    inventory updates, payment tracking, and order status management with full audit trail.
+                </p>
+                
+                <div class="links-section">
+                    <h3 class="links-title">Documentation & API</h3>
+                    <div class="link-item">
+                        <span class="link-label">Swagger:</span>
+                        <a href="http://localhost:8088/swagger-ui/index.html" class="link-url" target="_blank">Order API Docs</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="link-label">API Base:</span>
+                        <a href="/api/v1/orders" class="link-url" target="_blank">/api/v1/orders</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="link-label">Admin API:</span>
+                        <a href="/api/v1/admin/orders" class="link-url" target="_blank">/api/v1/admin/orders</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -770,5 +805,4 @@
         });
     </script>
 </body>
-</html> 
 </html> 

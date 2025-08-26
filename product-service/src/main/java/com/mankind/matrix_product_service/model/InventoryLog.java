@@ -46,6 +46,9 @@ public class InventoryLog {
     @Column(name = "cart_id")
     private Long cartId;
 
+    @Column(name = "order_id")
+    private Long orderId;
+
     public enum InventoryActionType {
         RESTOCK,
         SALE,
@@ -55,7 +58,8 @@ public class InventoryLog {
         STOCK_ADJUSTMENT,
         CART_ADD,
         CART_UPDATE,
-        CART_REMOVE
+        CART_REMOVE,
+        CART_CONVERT
     }
 
     @PrePersist

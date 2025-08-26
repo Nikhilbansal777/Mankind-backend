@@ -82,4 +82,13 @@ public class InventoryController {
             @RequestParam Long cartId) {
         return ResponseEntity.ok(inventoryService.updateReservedStockForCart(productId, oldQuantity, newQuantity, userId, cartId));
     }
+
+    @PostMapping("/{productId}/cart/convert")
+    @Operation(summary = "Convert reserved stock to sold", description = "Moves reserved stock to sold when cart is converted to order")
+    public ResponseEntity<InventoryResponseDTO> convertReservedToSold(
+            @PathVariable Long productId,
+            @RequestParam BigDecimal quantity,
+            @RequestParam Long orderId) {
+        return ResponseEntity.ok(inventoryService.convertReservedToSold(productId, quantity, orderId));
+    }
 } 

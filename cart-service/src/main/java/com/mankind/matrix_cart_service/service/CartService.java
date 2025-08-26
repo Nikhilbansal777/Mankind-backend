@@ -280,4 +280,44 @@ public class CartService {
     public CartResponseDTO removeItemFromCart(Long productId) {
         return updateItemQuantity(productId, 0);
     }
+
+    /**
+     * Marks the current user's cart as CONVERTED
+     * Used by order service when an order is created
+     */
+    @Transactional
+    public CartResponseDTO markCartAsConverted(Long orderId) {
+        Long userId = currentUserService.getCurrentUserId();
+        Optional<Cart> cartOpt = cartRepository.findByUserIdAndStatus(userId, CartStatus.ACTIVE);
+        
+        if (cartOpt.isEmpty()) {
+            throw new EntityNotFoundException("No active cart found for user");
+        }
+        
+        Cart cart = cartOpt.get();
+        cart.setStatus(CartStatus.CONVERTED);
+        Cart savedCart = cartRepository.save(cart);
+        
+        log.info("Cart {} converted to CONVERTED status for order: {}", cart.getId(), orderId);
+        
+        // Convert reserved inventory to sold for each cart item
+        for (CartItem cartItem : cart.getCartItems()) {
+            try {
+                productClient.convertReservedToSold(
+                    cartItem.getProductId(), 
+                    BigDecimal.valueOf(cartItem.getQuantity()), 
+                    orderId
+                );
+                log.info("Converted {} units of product {} from reserved to sold for order: {}", 
+                    cartItem.getQuantity(), cartItem.getProductId(), orderId);
+            } catch (Exception e) {
+                log.error("Failed to convert inventory for product {}: {}", cartItem.getProductId(), e.getMessage());
+                // Don't fail the cart conversion if inventory update fails
+                // The order service can handle this separately
+            }
+        }
+        
+        CartResponseDTO cartResponse = cartMapper.toResponseDTO(savedCart);
+        return cartResponse;
+    }
 }

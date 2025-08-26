@@ -47,6 +47,7 @@ services:
       - PAYMENT_SERVICE_URL=http://mankind-payment-service:8080
       - NOTIFICATION_SERVICE_URL=http://mankind-notification-service:8080
       - COUPON_SERVICE_URL=http://mankind-coupon-service:8080
+      - ORDER_SERVICE_URL=http://mankind-order-service:8080
       - KEYCLOAK_URL=http://keycloak:8080
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
@@ -77,6 +78,7 @@ services:
       - payment-service
       - notification-service
       - coupon-service
+      - order-service
 
   # Product Service
   product-service:
@@ -445,6 +447,65 @@ services:
     depends_on:
       - keycloak
       - user-service
+
+  # Order Service
+  order-service:
+    build:
+      context: .
+      dockerfile: order-service/Dockerfile
+      args:
+        MAVEN_OPTS: "-Xmx512m -XX:MaxMetaspaceSize=256m"
+    container_name: mankind-order-service
+    ports:
+      - "8088:8080"
+    env_file:
+      - order-service/.env
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_CONNECT_TIMEOUT=${DB_CONNECT_TIMEOUT}
+      - DB_SOCKET_TIMEOUT=${DB_SOCKET_TIMEOUT}
+      - DB_USE_SSL=${DB_USE_SSL}
+      - DB_ALLOW_PUBLIC_KEY_RETRIEVAL=${DB_ALLOW_PUBLIC_KEY_RETRIEVAL}
+      - DB_SERVER_TIMEZONE=${DB_SERVER_TIMEZONE}
+      - DB_AUTO_RECONNECT=${DB_AUTO_RECONNECT}
+      - DB_FAIL_OVER_READ_ONLY=${DB_FAIL_OVER_READ_ONLY}
+      - DB_HIKARI_MAX_POOL_SIZE=${DB_HIKARI_MAX_POOL_SIZE}
+      - DB_HIKARI_MIN_IDLE=${DB_HIKARI_MIN_IDLE}
+      - DB_HIKARI_CONNECTION_TIMEOUT=${DB_HIKARI_CONNECTION_TIMEOUT}
+      - DB_HIKARI_IDLE_TIMEOUT=${DB_HIKARI_IDLE_TIMEOUT}
+      - DB_HIKARI_MAX_LIFETIME=${DB_HIKARI_MAX_LIFETIME}
+      - USER_SERVICE_URL=http://mankind-user-service:8080
+      - CART_SERVICE_URL=http://mankind-cart-service:8080
+      - COUPON_SERVICE_URL=http://mankind-coupon-service:8080
+      - PRODUCT_SERVICE_URL=http://mankind-product-service:8080
+      - KEYCLOAK_URL=http://keycloak:8080
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+        reservations:
+          memory: 512M
+    networks:
+      - mankind-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    depends_on:
+      - keycloak
+      - user-service
+      - cart-service
+      - coupon-service
+      - product-service
 
 networks:
   mankind-network:

@@ -1,0 +1,72 @@
+### Admin Order Endpoints Examples
+
+# Get all orders (first page, default sorting by createdAt desc)
+# Expected: 403 Forbidden if user doesn't have ADMIN role
+GET http://localhost:8088/admin/orders?page=0&size=20
+Authorization: Bearer {{admin_jwt_token}}
+
+###
+
+# Get pending orders only
+GET http://localhost:8088/admin/orders?status=PENDING&page=0&size=10
+Authorization: Bearer {{admin_jwt_token}}
+
+###
+
+# Get orders from specific date range
+GET http://localhost:8088/admin/orders?createdAtFrom=2024-01-01T00:00:00&createdAtTo=2024-01-31T23:59:59&page=0&size=25
+Authorization: Bearer {{admin_jwt_token}}
+
+###
+
+# Get orders with multiple filters
+GET http://localhost:8088/admin/orders?status=CONFIRMED&paymentStatus=PAID&page=0&size=20
+Authorization: Bearer {{admin_jwt_token}}
+
+###
+
+# Get orders with custom page size
+GET http://localhost:8088/admin/orders?page=1&size=50
+Authorization: Bearer {{admin_jwt_token}}
+
+###
+
+# Get specific order by ID
+# Expected: 403 Forbidden if user doesn't have ADMIN role
+GET http://localhost:8088/admin/orders/1
+Authorization: Bearer {{admin_jwt_token}}
+
+###
+
+# Update order status
+PATCH http://localhost:8088/admin/orders/123/status
+Authorization: Bearer {{admin_jwt_token}}
+Content-Type: application/json
+
+{
+  "status": "CONFIRMED",
+  "notes": "Payment received, order confirmed by admin"
+}
+
+###
+
+# Update order status to processing
+PATCH http://localhost:8088/admin/orders/123/status
+Authorization: Bearer {{admin_jwt_token}}
+Content-Type: application/json
+
+{
+  "status": "PROCESSING",
+  "notes": "Order moved to processing phase"
+}
+
+###
+
+# Cancel order
+PATCH http://localhost:8088/admin/orders/123/cancel
+Authorization: Bearer {{admin_jwt_token}}
+
+###
+
+# Variables (set these in your environment or IDE)
+# admin_jwt_token = your_admin_jwt_token_here
