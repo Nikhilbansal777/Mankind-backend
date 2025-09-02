@@ -170,7 +170,7 @@ public class OrderService {
         // Create status history for update
         String statusNote = request.getCouponCode() != null && !request.getCouponCode().trim().isEmpty() 
             ? "Order updated with coupon: " + request.getCouponCode() 
-            : "Order updated (coupon removed)";
+            : "Order updated";
         createOrderStatusHistory(updatedOrder, statusNote);
 
         // Handle coupon changes
@@ -318,10 +318,14 @@ public class OrderService {
                     orderId, verificationResponse.getAmount(), verificationResponse.getStatus());
             
             // Step 3: Update order status to CONFIRMED and payment status to PAID
+            // Also save the payment ID from the payment service
             order.setStatus(Order.OrderStatus.CONFIRMED);
             order.setPaymentStatus(Order.PaymentStatus.PAID);
+            order.setPaymentId(verificationResponse.getStripePaymentIntentId()); // Save the payment intent ID
             order.setUpdatedAt(LocalDateTime.now());
             order = orderRepository.save(order);
+            
+            log.info("Order {} updated with payment ID: {}", orderId, verificationResponse.getStripePaymentIntentId());
             
             log.info("Order {} status updated - Status: {}, PaymentStatus: {}", 
                     orderId, order.getStatus(), order.getPaymentStatus());
@@ -333,7 +337,7 @@ public class OrderService {
             markCouponAsUsedIfApplied(order);
 
             // Step 6: Create comprehensive status history
-            createOrderStatusHistory(order, "Order payment completed successfully - Status: CONFIRMED, Payment: PAID, Cart: CONVERTED");
+            createOrderStatusHistory(order, "Order payment completed successfully - Status: CONFIRMED, Payment: PAID, Cart: CONVERTED, Payment ID: " + verificationResponse.getStripePaymentIntentId());
 
             log.info("Order {} payment completed successfully - Order: CONFIRMED, Payment: PAID, Cart: CONVERTED", 
                     order.getOrderNumber());
@@ -672,6 +676,7 @@ public class OrderService {
                 .cartId(order.getCartId())
                 .status(order.getStatus().name())
                 .paymentStatus(order.getPaymentStatus().name())
+                .paymentId(order.getPaymentId()) // Include payment ID in response
                 .subtotal(order.getSubtotal())
                 .tax(order.getTax())
                 .discounts(order.getDiscounts())
