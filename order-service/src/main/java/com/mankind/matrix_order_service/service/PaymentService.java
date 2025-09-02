@@ -108,7 +108,7 @@ public class PaymentService {
         }
         
         // Handle general payment service errors
-        if (errorMessage != null && errorMessage.contains("500") || errorMessage.contains("Internal Server Error")) {
+        if (errorMessage != null && (errorMessage.contains("500") || errorMessage.contains("Internal Server Error"))) {
             return String.format("Payment service is experiencing technical difficulties. Please try again later. (Provider: %s)", provider);
         }
         

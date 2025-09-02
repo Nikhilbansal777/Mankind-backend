@@ -10,6 +10,8 @@ import com.mankind.matrix_payment_service.repository.PaymentRepository;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import java.util.Map;
 public class StripePaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public PaymentIntentResponse createPaymentIntent(CreatePaymentIntentRequest request) {
@@ -121,14 +124,13 @@ public class StripePaymentService {
             return null;
         }
         
-        StringBuilder sb = new StringBuilder();
-        metadata.forEach((key, value) -> {
-            if (sb.length() > 0) {
-                sb.append(", ");
-            }
-            sb.append(key).append("=").append(value);
-        });
-        return sb.toString();
+        try {
+            return objectMapper.writeValueAsString(metadata);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize metadata to JSON: {}", e.getMessage(), e);
+            // Fallback to simple string representation if JSON serialization fails
+            return metadata.toString();
+        }
     }
 
     public PaymentVerificationResponse verifyPaymentWithStripe(String paymentIntentId) {

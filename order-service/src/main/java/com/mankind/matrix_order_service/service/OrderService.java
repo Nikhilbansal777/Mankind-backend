@@ -22,6 +22,7 @@ import com.mankind.matrix_order_service.exception.CouponValidationException;
 import com.mankind.matrix_order_service.exception.OrderCreationException;
 import com.mankind.matrix_order_service.exception.OrderNotFoundException;
 import com.mankind.matrix_order_service.exception.AccessDeniedException;
+import com.mankind.matrix_order_service.exception.PaymentServiceException;
 import com.mankind.matrix_order_service.model.Order;
 import com.mankind.matrix_order_service.model.OrderItem;
 import com.mankind.matrix_order_service.model.OrderStatusHistory;
@@ -311,7 +312,7 @@ public class OrderService {
             
             if (!verificationResponse.isPaymentSucceeded()) {
                 log.error("Payment verification failed for order {}: Status {}", orderId, verificationResponse.getStatus());
-                throw new CartValidationException("Payment verification failed. Payment status: " + verificationResponse.getStatus());
+                throw new PaymentServiceException("Payment verification failed. Payment status: " + verificationResponse.getStatus());
             }
             
             log.info("Payment verification successful for order {}: Amount {}, Status {}", 

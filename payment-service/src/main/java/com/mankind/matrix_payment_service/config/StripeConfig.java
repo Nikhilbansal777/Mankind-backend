@@ -17,6 +17,6 @@ public class StripeConfig {
     @PostConstruct
     public void initStripe() {
         Stripe.apiKey = stripeApiKey;
-        log.info("Stripe initialized with API key: {}", stripeApiKey.substring(0, 8) + "...");
+        log.info("Stripe initialized successfully");
     }
 }

@@ -65,7 +65,8 @@ public class PaymentService {
         // Verify payment based on provider
         PaymentVerificationResponse response = switch (payment.getProvider()) {
             case STRIPE -> stripePaymentService.verifyPaymentWithStripe(request.getPaymentIntentId());
-            default -> throw new RuntimeException("Payment provider not supported for verification: " + payment.getProvider());
+            default -> throw new ProviderNotImplementedException(
+                    "Payment provider not supported for verification: " + payment.getProvider());
         };
 
         // Create a new response with the orderId included
