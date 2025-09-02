@@ -68,12 +68,25 @@ public class PaymentService {
             default -> throw new RuntimeException("Payment provider not supported for verification: " + payment.getProvider());
         };
 
-        // Set the orderId from the request
-        response.setOrderId(request.getOrderId());
+        // Create a new response with the orderId included
+        PaymentVerificationResponse finalResponse = PaymentVerificationResponse.builder()
+                .id(response.getId())
+                .stripePaymentIntentId(response.getStripePaymentIntentId())
+                .userId(response.getUserId())
+                .amount(response.getAmount())
+                .currency(response.getCurrency())
+                .provider(response.getProvider())
+                .status(response.getStatus())
+                .description(response.getDescription())
+                .paymentSucceeded(response.isPaymentSucceeded())
+                .orderId(request.getOrderId())
+                .createdAt(response.getCreatedAt())
+                .updatedAt(response.getUpdatedAt())
+                .build();
 
         log.info("Payment verification completed for order {}: {}", request.getOrderId(), 
-                response.isPaymentSucceeded() ? "SUCCESS" : "FAILED");
+                finalResponse.isPaymentSucceeded() ? "SUCCESS" : "FAILED");
 
-        return response;
+        return finalResponse;
     }
 }

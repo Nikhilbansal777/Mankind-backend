@@ -57,10 +57,7 @@ public class StripePaymentService {
             
             // Set metadata if not empty
             if (!metadata.isEmpty()) {
-                paramsBuilder.putMetadata("user_id", request.getUserId());
-                if (request.getMetadata() != null) {
-                    request.getMetadata().forEach(paramsBuilder::putMetadata);
-                }
+                metadata.forEach(paramsBuilder::putMetadata);
             }
 
             // Create payment intent with Stripe

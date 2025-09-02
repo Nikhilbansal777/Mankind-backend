@@ -1,6 +1,7 @@
 package com.mankind.matrix_payment_service.repository;
 
 import com.mankind.matrix_payment_service.model.Payment;
+import com.mankind.matrix_payment_service.model.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByUserId(String userId);
     
     @Query("SELECT p FROM Payment p WHERE p.userId = :userId AND p.status = :status")
-    List<Payment> findByUserIdAndStatus(@Param("userId") String userId, @Param("status") String status);
+    List<Payment> findByUserIdAndStatus(@Param("userId") String userId, @Param("status") PaymentStatus status);
     
     boolean existsByStripePaymentIntentId(String stripePaymentIntentId);
 }
