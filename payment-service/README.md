@@ -6,11 +6,13 @@ The Payment Service is a microservice responsible for handling credit/debit card
 
 ## Features
 
-- Create Stripe payment intents and return client_secret for frontend processing
-- Track payment status and history
-- Role-based access control (User and Admin endpoints)
-- Stripe webhook integration for payment status updates
-- Comprehensive logging of payment events
+- **Multi-Provider Support**: Extensible architecture supporting multiple payment providers
+- **Stripe Integration**: Create payment intents and return client_secret for frontend processing
+- **Provider Strategy Pattern**: Easy to add new payment providers (PayPal, Adyen, etc.)
+- **Track payment status and history**
+- **Role-based access control** (User and Admin endpoints)
+- **Stripe webhook integration** for payment status updates
+- **Comprehensive logging** of payment events
 
 ## Tech Stack
 
@@ -37,10 +39,11 @@ You can also access the Swagger UI at `http://localhost:8084/swagger-ui.html` wh
 - Maven
 - Docker and Docker Compose (for containerized deployment)
 - MySQL database
+- Stripe account with API keys
 
 ### Environment Variables
 
-The following environment variables can be configured in the `.env` file:
+Copy the `env.template` file to `.env` and configure the following environment variables:
 
 ```
 # Database Configuration
@@ -61,11 +64,11 @@ STRIPE_PUBLIC_KEY=your_stripe_public_key
 #### Local Development
 
 1. Clone the repository
-2. Configure the environment variables in `.env` file
-3. Run the database setup script: `mysql -u root -p < scripts/setup.sql`
-4. Run the database tables script: `mysql -u root -p < scripts/payment_tables.sql`
+2. Copy `env.template` to `.env` and configure your environment variables
+3. Ensure MySQL is running and the `mankind_matrix_db` database exists
+4. Run the payment tables script: `mysql -u root -p < scripts/payment_tables.sql`
 5. Build the application: `mvn clean package`
-6. Run the application: `java -jar target/payment-service.jar`
+6. Run the application: `mvn spring-boot:run`
 
 #### Docker Deployment
 
@@ -79,6 +82,13 @@ docker-compose up -d
 ```
 
 ## Testing
+
+### API Testing
+
+You can test the API endpoints using the provided `api/requests.http` file or with tools like Postman:
+
+1. **Create Payment Intent**: `POST /payments/intents`
+2. **Get Payment Intent**: `GET /payments/intents/{stripePaymentIntentId}`
 
 ### Unit Tests
 
@@ -102,9 +112,28 @@ mvn verify
 2. Open `http://localhost:8084/swagger-ui.html` in your browser
 3. Use the Swagger UI to test the API endpoints
 
+## Architecture
+
+### Payment Provider Strategy Pattern
+
+The service uses a strategy pattern to support multiple payment providers:
+
+- **PaymentService**: Main orchestrator that routes requests based on provider
+- **StripePaymentService**: Handles Stripe-specific payment logic
+- **Future Providers**: Easy to add PayPal, Adyen, Braintree, etc.
+
+### Current Implementation
+
+- ✅ **STRIPE**: Fully implemented with payment intent creation
+- ❌ **PAYPAL**: Not implemented (returns 501 Not Implemented)
+- ❌ **ADYEN**: Not implemented (returns 501 Not Implemented)
+- ❌ **BRAINTREE**: Not implemented (returns 501 Not Implemented)
+
 ## Stripe Integration
 
 This service integrates with Stripe for payment processing. To test payments:
+
+- See the full payment flow diagram in `docs/payment-flow.md`.
 
 1. Use Stripe test keys in your environment variables
 2. Use Stripe test cards for payment testing:

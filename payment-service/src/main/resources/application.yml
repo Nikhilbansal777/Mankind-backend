@@ -9,6 +9,8 @@ springdoc:
     operationsSorter: method
     tagsSorter: alpha
     tryItOutEnabled: true
+    display-request-duration: true
+    filter: true
   show-actuator: false
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
@@ -71,6 +73,5 @@ management:
 
 # Stripe Configuration
 stripe:
-  api-key: ${STRIPE_API_KEY:sk_test_51NxyzABCDEFGHIJKLMNOPQRSTUVWXYZ}
-  webhook-secret: ${STRIPE_WEBHOOK_SECRET:whsec_12345}
-  public-key: ${STRIPE_PUBLIC_KEY:pk_test_51NxyzABCDEFGHIJKLMNOPQRSTUVWXYZ}
+  secret-key: ${STRIPE_SECRET_KEY:sk_test_51NxyzABCDEFGHIJKLMNOPQRSTUVWXYZ}
+  currency: ${STRIPE_CURRENCY:usd}

@@ -1,0 +1,115 @@
+### Payment Service API Test Requests
+
+### Direct Service Access (Development)
+### 1. Create Payment Intent
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user_123",
+  "amount": 29.99,
+  "currency": "USD",
+  "provider": "STRIPE",
+  "description": "Test payment for order #12345",
+  "metadata": {
+    "order_id": "12345",
+    "product_type": "subscription"
+  }
+}
+
+### 2. Create Payment Intent (EUR)
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user_456",
+  "amount": 49.99,
+  "currency": "EUR",
+  "provider": "STRIPE",
+  "description": "Premium subscription payment",
+  "metadata": {
+    "subscription_type": "premium",
+    "billing_cycle": "monthly"
+  }
+}
+
+### 3. Get Payment Intent Details
+GET http://localhost:8084/payments/intents/pi_test_1234567890
+
+### 4. Create Payment Intent (Invalid - Missing Amount)
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user_789",
+  "currency": "USD",
+  "provider": "STRIPE",
+  "description": "Invalid payment request"
+}
+
+### 5. Create Payment Intent (Invalid - Negative Amount)
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user_999",
+  "amount": -10.00,
+  "currency": "USD",
+  "provider": "STRIPE",
+  "description": "Invalid negative amount"
+}
+
+### 6. Create Payment Intent (Invalid - Wrong Currency Format)
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user_888",
+  "amount": 25.00,
+  "currency": "USDD",
+  "provider": "STRIPE",
+  "description": "Invalid currency format"
+}
+
+### Gateway Access (Production)
+### 7. Create Payment Intent via Gateway
+POST http://localhost:8085/api/v1/payments/intents
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+  "userId": "user_123",
+  "amount": 29.99,
+  "currency": "USD",
+  "provider": "STRIPE",
+  "description": "Payment via gateway"
+}
+
+### 8. Get Payment Intent via Gateway
+GET http://localhost:8085/api/v1/payments/intents/pi_test_1234567890
+Authorization: Bearer your_jwt_token_here
+
+### Test Different Payment Providers
+### 9. Test PayPal Provider (Not Implemented - Should Return 501)
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user_999",
+  "amount": 15.99,
+  "currency": "USD",
+  "provider": "PAYPAL",
+  "description": "Test PayPal payment (not implemented)"
+}
+
+### 10. Test Adyen Provider (Not Implemented - Should Return 501)
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user_888",
+  "amount": 25.50,
+  "currency": "EUR",
+  "provider": "ADYEN",
+  "description": "Test Adyen payment (not implemented)"
+}

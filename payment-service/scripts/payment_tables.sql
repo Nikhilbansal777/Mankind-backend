@@ -1,36 +1,26 @@
--- payment_tables.sql
+-- Payment Service Database Schema
+-- Run this script to create the necessary tables for the payment service
+
 USE mankind_matrix_db;
 
--- Create payment table
-CREATE TABLE IF NOT EXISTS payment (
-  id BINARY(16) PRIMARY KEY,
-  order_id VARCHAR(100) NOT NULL,
-  user_id VARCHAR(100) NOT NULL,
-  amount DECIMAL(10, 2) NOT NULL,
-  currency VARCHAR(3) NOT NULL,
-  payment_status ENUM('PENDING', 'SUCCESS', 'FAILED') DEFAULT 'PENDING',
-  payment_method ENUM('CREDIT_CARD', 'DEBIT_CARD', 'PAYPAL', 'APPLE_PAY', 'GOOGLE_PAY') NOT NULL,
-  payment_gateway ENUM('STRIPE', 'PAYPAL', 'BRAINTREE') DEFAULT 'STRIPE',
-  transaction_id VARCHAR(100),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- Create payments table
+CREATE TABLE IF NOT EXISTS payments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    stripe_payment_intent_id VARCHAR(255) NOT NULL UNIQUE,
+    user_id VARCHAR(255) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    currency VARCHAR(3) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    description TEXT,
+    metadata TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    INDEX idx_user_id (user_id),
+    INDEX idx_stripe_payment_intent_id (stripe_payment_intent_id),
+    INDEX idx_status (status),
+    INDEX idx_created_at (created_at)
 );
 
--- Create payment_log table
-CREATE TABLE IF NOT EXISTS payment_log (
-  id BINARY(16) PRIMARY KEY,
-  payment_id BINARY(16) NOT NULL,
-  log_type ENUM('INFO', 'WARNING', 'ERROR', 'DEBUG', 'TRANSACTION') NOT NULL,
-  log_message TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (payment_id) REFERENCES payment(id)
-);
-
--- Add indexes for better performance
-CREATE INDEX idx_payment_user_id ON payment(user_id);
-CREATE INDEX idx_payment_order_id ON payment(order_id);
-CREATE INDEX idx_payment_status ON payment(payment_status);
-CREATE INDEX idx_payment_transaction_id ON payment(transaction_id);
-CREATE INDEX idx_payment_log_payment_id ON payment_log(payment_id);
-CREATE INDEX idx_payment_log_log_type ON payment_log(log_type);
-CREATE INDEX idx_payment_log_created_at ON payment_log(created_at);
+-- Verify table creation
+SELECT 'Payments table created successfully' AS status;

@@ -15,7 +15,6 @@ import java.util.List;
 
 @Configuration
 public class OpenApiConfig {
-
     private static final String SECURITY_SCHEME_NAME = "bearerAuth";
 
     @Bean
@@ -26,10 +25,10 @@ public class OpenApiConfig {
                         .description("""
                             API documentation for the Mankind Matrix Payment Service.
                             This service provides endpoints for managing payments, allowing users to:
-                            - Process payments
-                            - Manage payment methods
-                            - View payment history
-                            - Handle refunds
+                            - Create payment intents with Stripe
+                            - View payment status and history
+                            - Process payment confirmations
+                            - Verify payments with payment providers
 
                             All endpoints are prefixed with `/payments`.
                             
@@ -41,23 +40,24 @@ public class OpenApiConfig {
                                 .email("support@mankindmatrix.com")
                                 .url("https://www.mankindmatrix.com"))
                         .license(new License()
-                                .name("Proprietary")
-                                .url("https://www.mankindmatrix.com/license")))
+                                .name("Apache 2.0")
+                                .url("https://www.apache.org/licenses/LICENSE-2.0")))
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:8084")
-                                .description("Local Development Server (Direct Access)"),
+                                .url("http://localhost:8085/api/v1")
+                                .description("Gateway Server (Production)"),
                         new Server()
-                                .url("http://localhost:8085/api/v1/payments")
-                                .description("Gateway Server (Through Gateway)")
+                                .url("http://localhost:8084")
+                                .description("Direct Service (Development)")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
                 .components(new Components()
-                        .addSecuritySchemes(SECURITY_SCHEME_NAME, new SecurityScheme()
-                                .name(SECURITY_SCHEME_NAME)
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")
-                                .description("JWT token for authentication. Include the token with the Bearer prefix, e.g. 'Bearer eyJhbGciOiJIUzI1NiJ9...'")));
+                        .addSecuritySchemes(SECURITY_SCHEME_NAME,
+                                new SecurityScheme()
+                                        .name(SECURITY_SCHEME_NAME)
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                                        .description("JWT token for authentication")));
     }
 }

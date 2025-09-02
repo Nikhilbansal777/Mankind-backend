@@ -4,13 +4,19 @@ import com.mankind.api.cart.dto.CartResponseDTO;
 import com.mankind.api.cart.dto.CartItemResponseDTO;
 import com.mankind.api.coupon.dto.CouponDTO;
 import com.mankind.api.user.dto.AddressDTO;
+import com.mankind.api.payment.dto.PaymentVerificationRequest;
+import com.mankind.api.payment.dto.PaymentVerificationResponse;
 import com.mankind.matrix_order_service.client.CartClient;
 import com.mankind.matrix_order_service.client.CouponClient;
 import com.mankind.matrix_order_service.client.UserClient;
+import com.mankind.matrix_order_service.client.PaymentClient;
 import com.mankind.matrix_order_service.dto.CreateOrderRequest;
 import com.mankind.matrix_order_service.dto.OrderResponseDTO;
 import com.mankind.matrix_order_service.dto.OrderItemDTO;
 import com.mankind.matrix_order_service.dto.OrderCouponDTO;
+import com.mankind.matrix_order_service.dto.PaymentIntentRequest;
+import com.mankind.matrix_order_service.dto.PayOrderRequest;
+import com.mankind.matrix_order_service.dto.OrderPaymentIntentResponse;
 import com.mankind.matrix_order_service.exception.CartValidationException;
 import com.mankind.matrix_order_service.exception.CouponValidationException;
 import com.mankind.matrix_order_service.exception.OrderCreationException;
@@ -46,6 +52,8 @@ public class OrderService {
     private final CartClient cartClient;
     private final CouponClient couponClient;
     private final UserClient userClient;
+    private final PaymentClient paymentClient;
+    private final PaymentService paymentService;
     private final CurrentUserService currentUserService;
     private final OrderNumberGenerator orderNumberGenerator;
     
@@ -233,6 +241,41 @@ public class OrderService {
     }
 
     /**
+     * Creates a payment intent for an order to initiate payment processing.
+     * 
+     * @param orderId The ID of the order to create payment intent for
+     * @param request The payment intent request containing the payment provider
+     * @return OrderPaymentIntentResponse containing the payment intent details with provider information
+     * @throws OrderNotFoundException if the order is not found
+     * @throws AccessDeniedException if the user doesn't own the order
+     * @throws IllegalArgumentException if the order cannot have payment intent created (wrong status)
+     */
+    public OrderPaymentIntentResponse createPaymentIntent(Long orderId, PaymentIntentRequest request) {
+        log.info("Creating payment intent for order: {} with provider: {}", orderId, request.getProvider());
+        
+        try {
+            // Step 1: Validate order and ownership
+            Order order = findOrderById(orderId);
+            validateOrderOwnership(order);
+            validateOrderCanHavePaymentIntent(order);
+            
+            log.info("Order {} validation passed - Status: {}, PaymentStatus: {}", 
+                    orderId, order.getStatus(), order.getPaymentStatus());
+            
+            // Step 2: Get current user ID from token
+            Long userId = currentUserService.getCurrentUserId();
+            log.info("Current user ID: {}", userId);
+            
+            // Step 3: Delegate to PaymentService
+            return paymentService.createPaymentIntent(order, request, userId);
+            
+        } catch (Exception e) {
+            log.error("Failed to create payment intent for order {}: {}", orderId, e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    /**
      * Completes the payment for an order, changing its status to CONFIRMED and payment status to PAID.
      * Also updates the associated cart status to CONVERTED.
      * 
@@ -244,8 +287,8 @@ public class OrderService {
      * @throws OrderCreationException if cart status update fails
      */
     @Transactional
-    public OrderResponseDTO payOrder(Long orderId) {
-        log.info("Starting payment process for order: {}", orderId);
+    public OrderResponseDTO payOrder(Long orderId, PayOrderRequest request) {
+        log.info("Starting payment process for order: {} with payment intent: {}", orderId, request.getPaymentIntentId());
         
         try {
             // Step 1: Validate order and ownership
@@ -256,8 +299,23 @@ public class OrderService {
             log.info("Order {} validation passed - Status: {}, PaymentStatus: {}", 
                     orderId, order.getStatus(), order.getPaymentStatus());
             
-            // Step 2: Simulate successful payment (to be replaced by external service in the future)
-            log.info("Simulating payment success for order {}", order.getOrderNumber());
+            // Step 2: Verify payment with payment service
+            log.info("Verifying payment with payment service for order {}", order.getOrderNumber());
+            
+            PaymentVerificationRequest verificationRequest = PaymentVerificationRequest.builder()
+                    .orderId(orderId.toString())
+                    .paymentIntentId(request.getPaymentIntentId())
+                    .build();
+            
+            PaymentVerificationResponse verificationResponse = paymentClient.verifyPayment(verificationRequest);
+            
+            if (!verificationResponse.isPaymentSucceeded()) {
+                log.error("Payment verification failed for order {}: Status {}", orderId, verificationResponse.getStatus());
+                throw new CartValidationException("Payment verification failed. Payment status: " + verificationResponse.getStatus());
+            }
+            
+            log.info("Payment verification successful for order {}: Amount {}, Status {}", 
+                    orderId, verificationResponse.getAmount(), verificationResponse.getStatus());
             
             // Step 3: Update order status to CONFIRMED and payment status to PAID
             order.setStatus(Order.OrderStatus.CONFIRMED);
@@ -378,6 +436,17 @@ public class OrderService {
         }
         if (order.getTotal() == null || order.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
             throw new CartValidationException("Order has invalid total amount: " + order.getTotal());
+        }
+    }
+
+    private void validateOrderCanHavePaymentIntent(Order order) {
+        if (order.getStatus() != Order.OrderStatus.PENDING) {
+            throw new IllegalArgumentException("Payment intent cannot be created. Current status: " + order.getStatus() + 
+                    ". Only orders with PENDING status can have payment intents created.");
+        }
+        
+        if (order.getPaymentStatus() == Order.PaymentStatus.PAID) {
+            throw new IllegalArgumentException("Payment intent cannot be created. Order has already been paid. Payment status: " + order.getPaymentStatus());
         }
     }
 
@@ -584,6 +653,8 @@ public class OrderService {
             log.debug("No coupon applied to order {} - no action needed", order.getId());
         }
     }
+
+
 
     // ============================================================================
     // DTO BUILDING HELPER METHODS

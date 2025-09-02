@@ -89,4 +89,5 @@ management:
 USER_SERVICE_URL: http://localhost:8081
 CART_SERVICE_URL: http://localhost:8082
 COUPON_SERVICE_URL: http://localhost:8087
+PAYMENT_SERVICE_URL: http://localhost:8084
 PRODUCT_SERVICE_URL: http://localhost:8080

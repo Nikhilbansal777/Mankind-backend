@@ -5,83 +5,55 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "payment")
+@Table(name = "payments")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Payment {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
-    private String orderId;
+    @Column(name = "stripe_payment_intent_id", unique = true, nullable = false)
+    private String stripePaymentIntentId;
 
-    @Column(nullable = false)
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
-    @Column(nullable = false, length = 3)
+    @Column(name = "currency", nullable = false, length = 3)
     private String currency;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentStatus paymentStatus;
+    @Column(name = "provider", nullable = false)
+    private PaymentProvider provider;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentMethod paymentMethod;
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentGateway paymentGateway;
+    @Column(name = "description")
+    private String description;
 
-    @Column
-    private String transactionId;
+    @Column(name = "metadata", columnDefinition = "TEXT")
+    private String metadata;
 
-    @Column(nullable = false)
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PaymentLog> logs = new ArrayList<>();
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        if (this.paymentStatus == null) {
-            this.paymentStatus = PaymentStatus.PENDING;
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    // Helper method to add payment log
-    public void addLog(PaymentLog log) {
-        logs.add(log);
-        log.setPayment(this);
-    }
-
-    // Helper method to remove payment log
-    public void removeLog(PaymentLog log) {
-        logs.remove(log);
-        log.setPayment(null);
-    }
 }

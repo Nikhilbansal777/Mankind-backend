@@ -2,6 +2,9 @@ package com.mankind.matrix_order_service.controller;
 
 import com.mankind.matrix_order_service.dto.CreateOrderRequest;
 import com.mankind.matrix_order_service.dto.OrderResponseDTO;
+import com.mankind.matrix_order_service.dto.PaymentIntentRequest;
+import com.mankind.matrix_order_service.dto.PayOrderRequest;
+import com.mankind.matrix_order_service.dto.OrderPaymentIntentResponse;
 import com.mankind.matrix_order_service.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -67,6 +70,23 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
+    @Operation(summary = "Create payment intent", description = "Creates a payment intent for an order to initiate payment processing. Only orders with PENDING status can have payment intents created. The system will validate order ownership and retrieve order details to create the payment intent.")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Payment intent created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid request - order cannot have payment intent created (wrong status)"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized - JWT required"),
+        @ApiResponse(responseCode = "403", description = "Forbidden - order does not belong to current user"),
+        @ApiResponse(responseCode = "404", description = "Order not found")
+    })
+    @PostMapping("/{orderId}/payment-intent")
+    public ResponseEntity<OrderPaymentIntentResponse> createPaymentIntent(
+            @Parameter(description = "ID of the order to create payment intent for", required = true) 
+            @PathVariable Long orderId,
+            @Valid @RequestBody PaymentIntentRequest request) {
+        OrderPaymentIntentResponse paymentIntent = orderService.createPaymentIntent(orderId, request);
+        return ResponseEntity.ok(paymentIntent);
+    }
+
     @Operation(summary = "Pay order", description = "Completes the payment for an order and updates cart status to CONVERTED. Only orders with PENDING status can be paid. Payment will change order status to CONFIRMED and payment status to PAID.")
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Order payment completed successfully"),
@@ -78,8 +98,9 @@ public class OrderController {
     @PostMapping("/{orderId}/pay")
     public ResponseEntity<OrderResponseDTO> payOrder(
             @Parameter(description = "ID of the order to pay", required = true) 
-            @PathVariable Long orderId) {
-        OrderResponseDTO order = orderService.payOrder(orderId);
+            @PathVariable Long orderId,
+            @Valid @RequestBody PayOrderRequest request) {
+        OrderResponseDTO order = orderService.payOrder(orderId, request);
         return ResponseEntity.ok(order);
     }
 

@@ -21,6 +21,7 @@
     <module>product-api</module>
     <module>cart-api</module>
     <module>coupon-api</module>
+    <module>payment-api</module>
 
   </modules>
   <properties>
@@ -66,6 +67,11 @@
       <dependency>
         <groupId>com.mankind</groupId>
         <artifactId>coupon-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.mankind</groupId>
+        <artifactId>payment-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

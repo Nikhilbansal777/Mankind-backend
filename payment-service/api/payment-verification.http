@@ -1,0 +1,26 @@
+### Payment Verification API Tests
+
+### 1. Create Payment Intent (with provider)
+POST http://localhost:8084/payments/intents
+Content-Type: application/json
+
+{
+  "userId": "user-123",
+  "orderId": "order-456",
+  "amount": 99.99,
+  "currency": "USD",
+  "description": "Test payment for order",
+  "provider": "STRIPE"
+}
+
+### 2. Verify Payment (checks provider and verifies with Stripe)
+POST http://localhost:8084/payments/verify
+Content-Type: application/json
+
+{
+  "orderId": "order-456",
+  "paymentIntentId": "pi_test_123456789"
+}
+
+### 3. Get Payment Intent Details
+GET http://localhost:8084/payments/intents/pi_test_123456789

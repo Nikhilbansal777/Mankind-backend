@@ -1,0 +1,23 @@
+### Order Service Pay Endpoint Tests
+
+### 1. Pay Order (with payment verification)
+POST http://localhost:8082/orders/1/pay
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "paymentIntentId": "pi_test_123456789"
+}
+
+### 2. Create Payment Intent for Order
+POST http://localhost:8082/orders/1/payment-intent
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "provider": "STRIPE"
+}
+
+### 3. Get Order Details
+GET http://localhost:8082/orders/1
+Authorization: Bearer {{jwt_token}}
