@@ -1,6 +1,7 @@
 package com.mankind.matrix_payment_service.exception;
 
 import com.mankind.matrix_payment_service.dto.ErrorResponse;
+import com.stripe.exception.StripeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,6 +63,51 @@ public class GlobalExceptionHandler {
 
         log.warn("Provider not implemented: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(errorResponse);
+    }
+
+    @ExceptionHandler(StripePaymentException.class)
+    public ResponseEntity<ErrorResponse> handleStripePaymentException(StripePaymentException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String errorType = "Payment Error";
+        
+        // Determine appropriate HTTP status based on the underlying Stripe exception
+        if (ex.hasStripeException()) {
+            StripeException stripeException = ex.getStripeException();
+            // Map Stripe error codes to appropriate HTTP status codes
+            if (stripeException.getStripeError() != null) {
+                switch (stripeException.getStripeError().getType()) {
+                    case "card_error":
+                        status = HttpStatus.BAD_REQUEST;
+                        errorType = "Card Error";
+                        break;
+                    case "invalid_request_error":
+                        status = HttpStatus.BAD_REQUEST;
+                        errorType = "Invalid Request";
+                        break;
+                    case "api_error":
+                        status = HttpStatus.SERVICE_UNAVAILABLE;
+                        errorType = "Payment Service Error";
+                        break;
+                    case "authentication_error":
+                        status = HttpStatus.UNAUTHORIZED;
+                        errorType = "Authentication Error";
+                        break;
+                    default:
+                        status = HttpStatus.INTERNAL_SERVER_ERROR;
+                        errorType = "Payment Processing Error";
+                }
+            }
+        }
+        
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error(errorType)
+                .message(ex.getMessage())
+                .build();
+
+        log.error("Stripe payment exception: {}", ex.getMessage(), ex);
+        return ResponseEntity.status(status).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)

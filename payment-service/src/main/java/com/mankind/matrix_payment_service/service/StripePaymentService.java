@@ -7,6 +7,7 @@ import com.mankind.matrix_payment_service.model.Payment;
 import com.mankind.matrix_payment_service.model.PaymentProvider;
 import com.mankind.matrix_payment_service.model.PaymentStatus;
 import com.mankind.matrix_payment_service.repository.PaymentRepository;
+import com.mankind.matrix_payment_service.exception.StripePaymentException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
@@ -100,10 +101,10 @@ public class StripePaymentService {
 
         } catch (StripeException e) {
             log.error("Error creating Stripe payment intent: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to create Stripe payment intent: " + e.getMessage(), e);
+            throw new StripePaymentException("Failed to create Stripe payment intent: " + e.getMessage(), e);
         } catch (Exception e) {
             log.error("Unexpected error creating Stripe payment intent: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to create Stripe payment intent", e);
+            throw new StripePaymentException("Failed to create Stripe payment intent", e);
         }
     }
 
@@ -145,7 +146,7 @@ public class StripePaymentService {
             
             // Update payment in database with latest status
             Payment payment = paymentRepository.findByStripePaymentIntentId(paymentIntentId)
-                    .orElseThrow(() -> new RuntimeException("Payment not found: " + paymentIntentId));
+                    .orElseThrow(() -> new StripePaymentException("Payment not found: " + paymentIntentId));
             
             payment.setStatus(status);
             Payment updatedPayment = paymentRepository.save(payment);
@@ -168,7 +169,7 @@ public class StripePaymentService {
                     
         } catch (StripeException e) {
             log.error("Error verifying payment with Stripe: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to verify payment with Stripe: " + e.getMessage(), e);
+            throw new StripePaymentException("Failed to verify payment with Stripe: " + e.getMessage(), e);
         }
     }
 }
