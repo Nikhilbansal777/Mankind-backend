@@ -104,7 +104,7 @@ public class StripePaymentService {
             throw new StripePaymentException("Failed to create Stripe payment intent: " + e.getMessage(), e);
         } catch (Exception e) {
             log.error("Unexpected error creating Stripe payment intent: {}", e.getMessage(), e);
-            throw new StripePaymentException("Failed to create Stripe payment intent", e);
+            throw new StripePaymentException("Failed to create Stripe payment intent: " + e.getMessage());
         }
     }
 
