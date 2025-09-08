@@ -322,9 +322,6 @@ services:
       - DB_HIKARI_CONNECTION_TIMEOUT=${DB_HIKARI_CONNECTION_TIMEOUT}
       - DB_HIKARI_IDLE_TIMEOUT=${DB_HIKARI_IDLE_TIMEOUT}
       - DB_HIKARI_MAX_LIFETIME=${DB_HIKARI_MAX_LIFETIME}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-      - STRIPE_CURRENCY=${STRIPE_CURRENCY}
       - KEYCLOAK_URL=http://keycloak:8080
     deploy:
       resources:
@@ -484,6 +481,7 @@ services:
       - CART_SERVICE_URL=http://mankind-cart-service:8080
       - COUPON_SERVICE_URL=http://mankind-coupon-service:8080
       - PRODUCT_SERVICE_URL=http://mankind-product-service:8080
+      - PAYMENT_SERVICE_URL=http://mankind-payment-service:8080
       - KEYCLOAK_URL=http://keycloak:8080
     deploy:
       resources:
@@ -506,6 +504,7 @@ services:
       - cart-service
       - coupon-service
       - product-service
+      - payment-service
 
 networks:
   mankind-network:

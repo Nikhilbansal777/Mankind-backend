@@ -1,0 +1,82 @@
+### Payment Intent API Test Requests
+
+### Direct Service Access (Development)
+### 1. Create Payment Intent for Order
+POST http://localhost:8088/orders/1/payment-intent
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+  "provider": "STRIPE"
+}
+
+### Expected Response (now includes provider information):
+# {
+#   "id": 1,
+#   "stripePaymentIntentId": "pi_1234567890",
+#   "userId": "123",
+#   "amount": "99.99",
+#   "currency": "USD",
+#   "status": "PENDING",
+#   "description": "",
+#   "clientSecret": "pi_1234567890_secret_abcdef",
+#   "createdAt": "2024-01-01T10:00:00",
+#   "updatedAt": "2024-01-01T10:00:00",
+#   "provider": "STRIPE",
+#   "providerName": "STRIPE"
+# }
+
+### 2. Create Payment Intent with PayPal Provider
+POST http://localhost:8088/orders/1/payment-intent
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+  "provider": "PAYPAL"
+}
+
+### 3. Create Payment Intent with Adyen Provider
+POST http://localhost:8088/orders/1/payment-intent
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+  "provider": "ADYEN"
+}
+
+### Gateway Access (Production)
+### 4. Create Payment Intent via Gateway
+POST http://localhost:8085/api/v1/orders/1/payment-intent
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+  "provider": "STRIPE"
+}
+
+### Test Different Scenarios
+### 5. Test with Invalid Order ID (should return 404)
+POST http://localhost:8088/orders/99999/payment-intent
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+  "provider": "STRIPE"
+}
+
+### 6. Test with Missing Provider (should return 400)
+POST http://localhost:8088/orders/1/payment-intent
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+}
+
+### 7. Test with Invalid Provider (should return 400)
+POST http://localhost:8088/orders/1/payment-intent
+Content-Type: application/json
+Authorization: Bearer your_jwt_token_here
+
+{
+  "provider": "INVALID_PROVIDER"
+}

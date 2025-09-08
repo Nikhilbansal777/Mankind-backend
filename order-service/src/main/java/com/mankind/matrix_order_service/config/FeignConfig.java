@@ -3,6 +3,7 @@ package com.mankind.matrix_order_service.config;
 import com.mankind.matrix_order_service.exception.CartValidationException;
 import com.mankind.matrix_order_service.exception.CouponValidationException;
 import com.mankind.matrix_order_service.exception.AccessDeniedException;
+import com.mankind.matrix_order_service.exception.PaymentServiceException;
 import feign.Logger;
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
@@ -78,6 +79,8 @@ public class FeignConfig {
                         return new CouponValidationException("Coupon not found or invalid");
                     } else if (methodKey.contains("UserClient")) {
                         return new AccessDeniedException("User or address not found");
+                    } else if (methodKey.contains("PaymentClient")) {
+                        return new PaymentServiceException("Payment service resource not found: " + errorMessage);
                     } else {
                         return new IllegalArgumentException("Resource not found: " + errorMessage);
                     }
@@ -86,10 +89,18 @@ public class FeignConfig {
                 case 422:
                     return new IllegalArgumentException("Validation failed: " + errorMessage);
                 case 500:
+                    if (methodKey.contains("PaymentClient")) {
+                        // Extract more meaningful error information for payment service
+                        String paymentError = extractPaymentServiceError(errorMessage);
+                        return new PaymentServiceException("Payment service error: " + paymentError);
+                    }
                     return new RuntimeException("Internal server error in external service: " + errorMessage);
                 case 502:
                 case 503:
                 case 504:
+                    if (methodKey.contains("PaymentClient")) {
+                        return new PaymentServiceException("Payment service unavailable: " + errorMessage);
+                    }
                     return new RuntimeException("External service unavailable: " + errorMessage);
                 default:
                     return new RuntimeException("Unexpected error from external service: " + errorMessage);
@@ -105,6 +116,61 @@ public class FeignConfig {
                 logger.warn("Could not read error response body", e);
             }
             return "No error details available";
+        }
+
+        /**
+         * Extracts meaningful error information from payment service error messages.
+         * 
+         * @param errorMessage The full error message from payment service
+         * @return Clean, meaningful error message
+         */
+        private String extractPaymentServiceError(String errorMessage) {
+            if (errorMessage == null) {
+                return "Unknown payment service error";
+            }
+            
+            // Extract Stripe-specific error messages
+            if (errorMessage.contains("Invalid API Key")) {
+                return "Payment service configuration issue";
+            }
+            
+            if (errorMessage.contains("Failed to create Stripe payment intent")) {
+                // Extract the specific Stripe error
+                int startIndex = errorMessage.indexOf(":");
+                if (startIndex > 0 && startIndex < errorMessage.length() - 1) {
+                    String stripeError = errorMessage.substring(startIndex + 1).trim();
+                    if (stripeError.contains("Invalid API Key")) {
+                        return "Payment service configuration issue";
+                    }
+                    return stripeError;
+                }
+            }
+            
+            // Handle JSON error responses
+            if (errorMessage.contains("\"message\":")) {
+                try {
+                    // Simple JSON parsing to extract message
+                    int messageStart = errorMessage.indexOf("\"message\":");
+                    if (messageStart > 0) {
+                        int valueStart = errorMessage.indexOf("\"", messageStart + 10);
+                        if (valueStart > 0) {
+                            int valueEnd = errorMessage.indexOf("\"", valueStart + 1);
+                            if (valueEnd > 0) {
+                                return errorMessage.substring(valueStart + 1, valueEnd);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.warn("Could not parse JSON error message", e);
+                }
+            }
+            
+            // Return a clean version of the error
+            if (errorMessage.length() > 200) {
+                return errorMessage.substring(0, 200) + "...";
+            }
+            
+            return errorMessage;
         }
     }
 }

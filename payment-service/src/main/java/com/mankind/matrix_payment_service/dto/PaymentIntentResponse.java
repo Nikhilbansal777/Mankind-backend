@@ -1,0 +1,30 @@
+package com.mankind.matrix_payment_service.dto;
+
+import com.mankind.matrix_payment_service.model.PaymentProvider;
+import com.mankind.matrix_payment_service.model.PaymentStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PaymentIntentResponse {
+
+    private Long id;
+    private String stripePaymentIntentId;
+    private String userId;
+    private BigDecimal amount;
+    private String currency;
+    private PaymentProvider provider;
+    private PaymentStatus status;
+    private String description;
+    private String clientSecret;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+}

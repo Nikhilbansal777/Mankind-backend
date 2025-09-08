@@ -6,7 +6,7 @@ WORKDIR /build
 COPY . .
 
 # First, build and install the API modules to local repository
-RUN mvn clean install -pl user-api,product-api,cart-api,coupon-api -am -DskipTests
+RUN mvn clean install -pl user-api,product-api,cart-api,coupon-api,payment-api -am -DskipTests
 
 # Then build the order service
 RUN cd order-service && \

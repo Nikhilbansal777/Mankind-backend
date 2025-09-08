@@ -122,6 +122,11 @@
             <artifactId>coupon-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.mankind</groupId>
+            <artifactId>payment-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>

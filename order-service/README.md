@@ -59,11 +59,20 @@ This service handles order creation, management, payment processing, and lifecyc
 ## Payment Service Integration
 
 ### Architecture
-- **PaymentService Interface**: Defines contract for payment operations
-- **DraftPaymentService**: Development/testing implementation
-- **Future Implementations**: Stripe, PayPal, Square, etc.
+- **Payment Intent Creation**: New endpoint to create payment intents via external payment service
+- **PaymentClient**: OpenFeign client for communication with payment-service
+- **PaymentService**: Dedicated service for handling payment operations (extracted from OrderService)
+- **Multi-Provider Support**: Supports STRIPE, PAYPAL, ADYEN, and BRAINTREE providers
 
-### Payment Flow
+### Payment Intent Flow
+1. User requests payment intent via `/orders/{orderId}/payment-intent`
+2. System validates order ownership and status (must be PENDING)
+3. Order details are retrieved and payment intent request is created
+4. Payment intent is created via external payment service
+5. Client secret is returned for frontend payment processing
+6. Order status history is updated with payment intent creation
+
+### Payment Completion Flow
 1. User initiates payment via `/orders/{orderId}/pay`
 2. System validates order can be paid
 3. Payment is processed through configured payment service
@@ -90,6 +99,17 @@ This service handles order creation, management, payment processing, and lifecyc
 - `payment_id` - External payment service reference ID
 - `payment_status` - Current payment status (PENDING, PAID, FAILED, etc.)
 
+## Service Architecture
+
+### Service Layer Separation
+The order-service follows a clean separation of concerns with dedicated services:
+
+- **OrderService**: Core order management operations (order creation, updates, validation)
+- **PaymentService**: Payment-specific operations (payment intent creation, payment processing)
+- **CurrentUserService**: User context and authentication operations
+- **OrderNumberGenerator**: Order number generation logic
+- **RoleVerificationService**: Role-based access control
+
 ## External Service Dependencies
 
 ### Cart Service
@@ -103,6 +123,11 @@ This service handles order creation, management, payment processing, and lifecyc
 ### User Service
 - **Purpose**: Validate shipping address ownership
 - **Required**: For address validation during order creation
+
+### Payment Service
+- **Purpose**: Create payment intents for order processing
+- **Required**: For payment intent creation and payment processing
+- **Endpoints**: `/payments/intents` (POST)
 
 ## Getting Started
 
