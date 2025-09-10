@@ -10,174 +10,212 @@ TRUNCATE TABLE category;
 -- Re-enable foreign key checks
 SET FOREIGN_KEY_CHECKS = 1;
 
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (1, '2025-05-21 16:36:33', NULL, 'GPUs', '2025-05-21 16:36:33', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (2, '2025-05-21 16:36:33', NULL, 'AI Hardware', '2025-05-21 16:36:33', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (3, '2025-05-21 16:36:33', NULL, 'SINGLE BOARD COMPUTERS', '2025-05-21 16:36:33', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (4, '2025-05-21 16:36:33', NULL, 'MICROCONTROLLERS', '2025-05-21 16:36:33', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (5, '2025-05-21 16:36:33', NULL, 'EDGE AI COMPUTING', '2025-05-21 16:36:33', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (6, '2025-05-21 16:36:33', NULL, 'IOT DEVELOPMENT', '2025-05-21 16:36:33', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (7, '2025-05-21 18:43:52.842103', 'Electronic devices and accessories', 'Microservice', '2025-05-21 18:43:52.842103', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (8, '2025-05-21 18:59:09.283713', 'Electronic devices and accessories', 'Electronics', '2025-05-21 18:59:09.283713', NULL);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (9, '2025-05-22 18:05:46.951347', 'It is a subcategory', 'Test Category', '2025-05-22 18:05:46.951347', 1);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (10, '2025-08-26 15:26:24', 'Core chips used in microcontrollers', 'Microcontroller Chips', '2025-08-26 15:26:24', 4);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (11, '2025-08-26 15:26:24', 'Power supply and interfaces for boards', 'Power & Interfaces', '2025-08-26 15:26:24', 4);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (12, '2025-08-26 15:26:24', 'Input/Output pins and expansion slots', 'I/O & Expansion', '2025-08-26 15:26:24', 4);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (13, '2025-08-26 15:31:44', 'High-performance processors, GPUs, and cores', 'Processing Units', '2025-08-26 15:31:44', 2);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (14, '2025-08-26 15:31:44', 'Memory architecture, storage, and bandwidth', 'Memory & Storage', '2025-08-26 15:31:44', 2);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (15, '2025-08-26 15:31:44', 'Supported frameworks, APIs, and developer tools', 'Software & Framework Support', '2025-08-26 15:31:44', 2);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (16, '2025-08-26 16:14:28', 'High-performance rendering, ray tracing, and gaming visuals', 'Graphics & Rendering', '2025-08-26 16:14:28', 1);
+INSERT INTO `category` (`id`, `created_at`, `description`, `name`, `updated_at`, `parent_id`) VALUES (17, '2025-08-26 16:14:28', 'Cooling solutions', 'Cooling Systems', '2025-08-26 16:14:28', 1);
 
--- Insert Categories with fixed IDs
-INSERT INTO category (id, name, created_at, updated_at) VALUES
-(1, 'GPUs', NOW(), NOW()),
-(2, 'AI Hardware', NOW(), NOW()),
-(3, 'SINGLE BOARD COMPUTERS', NOW(), NOW()),
-(4, 'MICROCONTROLLERS', NOW(), NOW()),
-(5, 'EDGE AI COMPUTING', NOW(), NOW()),
-(6, 'IOT DEVELOPMENT', NOW(), NOW());
-
-
--- Insert Products with fixed IDs
-INSERT INTO products (id, name, description, category_id, sku, brand, model, is_active, is_featured, created_at, updated_at) VALUES
-(1, 'SpectraForce X Series', 'The SpectraForce X Series represents the pinnacle of gaming graphics technology. These cards deliver unparalleled performance for AAA gaming titles at 4K resolution with ray tracing enabled. Built on the latest architecture, they offer exceptional power efficiency while maintaining cool temperatures even under heavy loads.', 1, 'SFX-12G-001', 'SpectraForce', 'X-Series', TRUE, TRUE, NOW(), NOW()),
-(2, 'NovaCore Vision', 'NovaCore Vision cards are specially designed for content creators and professionals who demand reliability and performance. These workstation-class GPUs excel at 3D modeling, video editing, and complex CAD operations with certified drivers for all major professional applications.', 1, 'NCV-24G-001', 'NovaCore', 'Vision-Pro', TRUE, FALSE, NOW(), NOW()),
-(3, 'ThunderCore AI GPU', 'The ThunderCore AI GPU is designed specifically for high-throughput AI, machine learning, and data center workloads. With large memory bandwidth and optimized compute performance, it accelerates deep learning tasks and data processing tasks.', 1, 'TCG-32G-001', 'ThunderCore', 'AI-Series', TRUE, FALSE, NOW(), NOW()),
-(4, 'FusionRender Series', 'FusionRender Series GPUs are engineered for the most demanding HPC and AI model training applications. These cards offer massive parallel processing power, ideal for simulations, large-scale model training, and scientific computing.', 1, 'FRS-48G-001', 'FusionRender', 'HPC-Series', TRUE, TRUE, NOW(), NOW()),
-(5, 'QuantumMind Systems', 'QuantumMind Systems is a cutting-edge AI supercomputing platform, designed to accelerate deep learning and AI model training tasks. With multi-GPU configurations and optimized architecture, it empowers data scientists to handle complex workloads efficiently.', 2, 'QMS-8A-001', 'QuantumMind', 'SuperCompute', TRUE, TRUE, NOW(), NOW()),
-(6, 'EdgeNexus Platform', 'EdgeNexus Platform is an AI-powered edge computing solution designed to optimize real-time data processing for IoT devices, robotics, and autonomous machines. It features low-latency computing and is ideal for edge AI deployments.', 2, 'ENP-XV-001', 'EdgeNexus', 'Edge-AI', TRUE, FALSE, NOW(), NOW()),
-(7, 'RASPBERRY PI 4', 'The Raspberry Pi 4 is a versatile single-board computer ideal for DIY projects, education, and programming. With powerful features and connectivity, it can run multiple tasks simultaneously and is suitable for a range of applications.', 3, 'RPI4-4G-001', 'Raspberry Pi', 'Model 4B', TRUE, TRUE, NOW(), NOW()),
-(8, 'ARDUINO UNO', 'The Arduino UNO is an open-source electronics platform used for building a wide range of interactive projects. With a microcontroller and simple programming environment, it''s a great tool for beginners and advanced makers alike.', 4, 'ARDU-UNO-001', 'Arduino', 'UNO R3', TRUE, TRUE, NOW(), NOW()),
-(9, 'NVIDIA JETSON', 'NVIDIA Jetson is an AI computing platform built for accelerating GPU-intensive applications at the edge. With its compact size and powerful capabilities, it is ideal for IoT, robotics, and AI at the edge.', 5, 'NVJ-NANO-001', 'NVIDIA', 'Jetson Nano', TRUE, TRUE, NOW(), NOW()),
-(10, 'ESP32 DEV KIT', 'The ESP32 Dev Kit is a powerful development board for building IoT applications with Wi-Fi and Bluetooth. It features dual-core processing and a range of peripherals for rapid prototyping.', 6, 'ESP32-DK-001', 'Espressif', 'ESP32', TRUE, TRUE, NOW(), NOW()),
-(11, 'TEENSY 4.1', 'Teensy 4.1 is a USB-based development system with a powerful microcontroller that supports high-speed processing. It is ideal for audio processing, robotics, and advanced electronics projects.', 4, 'TNSY-41-001', 'PJRC', 'Teensy 4.1', TRUE, TRUE, NOW(), NOW()),
-(12, 'NeuraFlow Suite', 'NeuraFlow Suite is a high-performance parallel computing platform and API built for accelerating AI workloads and large-scale data processing tasks. It provides efficient processing pipelines for AI systems.', 2, 'NFS-V100-001', 'NeuraFlow', 'V100-Series', TRUE, FALSE, NOW(), NOW()),
-(13, 'DeepStream AI Studio', 'DeepStream AI Studio offers tools to build scalable AI-based video analytics applications for real-time processing in industries like retail, automotive, and security.', 2, 'DSAI-3080-001', 'DeepStream', 'RTX-Series', TRUE, FALSE, NOW(), NOW());
-
--- Insert Product Specifications
-INSERT INTO product_specifications (product_id, spec_key, spec_value) VALUES
--- SpectraForce X Series (1)
-(1, 'Memory', '12GB GDDR6X'),
-(1, 'CUDA Cores', '5,888'),
-(1, 'Base Clock', '1.5 GHz'),
-(1, 'Boost Clock', '1.8 GHz'),
-(1, 'TDP', '320W'),
-(1, 'Recommended PSU', '750W'),
-(1, 'Dimensions', '11.2 x 4.4 x 1.5 inches'),
-(1, 'Weight', '1.2 kg'),
--- NovaCore Vision (2)
-(2, 'Memory', '24GB GDDR6'),
-(2, 'CUDA Cores', '4,608'),
-(2, 'Base Clock', '1.3 GHz'),
-(2, 'Boost Clock', '1.7 GHz'),
-(2, 'TDP', '300W'),
-(2, 'ECC Memory', 'Yes'),
-(2, 'Dimensions', '12.5 x 5.5 x 1.7 inches'),
-(2, 'Weight', '1.4 kg'),
--- ThunderCore AI GPU (3)
-(3, 'Memory', '32GB GDDR6X'),
-(3, 'CUDA Cores', '6,144'),
-(3, 'Base Clock', '1.4 GHz'),
-(3, 'Boost Clock', '1.9 GHz'),
-(3, 'TDP', '350W'),
-(3, 'Recommended PSU', '850W'),
-(3, 'Dimensions', '13 x 5.7 x 2.0 inches'),
-(3, 'Weight', '1.8 kg'),
--- FusionRender Series (4)
-(4, 'Memory', '48GB GDDR6'),
-(4, 'CUDA Cores', '8,192'),
-(4, 'Base Clock', '1.2 GHz'),
-(4, 'Boost Clock', '1.6 GHz'),
-(4, 'TDP', '450W'),
-(4, 'Recommended PSU', '1000W'),
-(4, 'Dimensions', '14 x 6 x 2.5 inches'),
-(4, 'Weight', '2.2 kg'),
--- QuantumMind Systems (5)
-(5, 'CPU', 'Dual Intel Xeon Gold 6230'),
-(5, 'Memory', '1TB DDR4 ECC'),
-(5, 'Storage', '10TB SSD'),
-(5, 'GPU', '8 x NVIDIA Tesla A100'),
-(5, 'Dimensions', '24 x 20 x 8 inches'),
-(5, 'Weight', '60 kg'),
--- EdgeNexus Platform (6)
-(6, 'CPU', 'ARM Cortex-A76'),
-(6, 'GPU', 'NVIDIA Jetson Xavier'),
-(6, 'RAM', '32GB LPDDR4'),
-(6, 'Storage', '256GB eMMC'),
-(6, 'Dimensions', '8 x 5 x 3 inches'),
-(6, 'Weight', '2.3 kg'),
--- Raspberry Pi 4 (7)
-(7, 'CPU', 'Quad-core ARM Cortex-A72'),
-(7, 'RAM', '4GB LPDDR4'),
-(7, 'Storage', 'microSD card slot'),
-(7, 'GPU', 'Broadcom VideoCore VI'),
-(7, 'Dimensions', '3.4 x 2.2 x 1.1 inches'),
-(7, 'Weight', '0.06 kg'),
--- Arduino UNO (8)
-(8, 'Microcontroller', 'ATmega328P'),
-(8, 'Flash Memory', '32KB'),
-(8, 'Clock Speed', '16 MHz'),
-(8, 'Digital I/O Pins', '14'),
-(8, 'Analog I/O Pins', '6'),
-(8, 'Dimensions', '2.7 x 2.1 x 0.8 inches'),
-(8, 'Weight', '0.025 kg'),
--- NVIDIA Jetson (9)
-(9, 'CPU', 'Quad-core ARM Cortex-A57'),
-(9, 'GPU', 'NVIDIA Maxwell'),
-(9, 'RAM', '4GB LPDDR4'),
-(9, 'Storage', '16GB eMMC'),
-(9, 'Dimensions', '3.5 x 3.2 x 1.1 inches'),
-(9, 'Weight', '0.3 kg'),
--- ESP32 DEV KIT (10)
-(10, 'CPU', 'Dual-core Tensilica LX6'),
-(10, 'RAM', '520KB SRAM'),
-(10, 'Storage', '4MB Flash'),
-(10, 'Wi-Fi', '802.11 b/g/n'),
-(10, 'Bluetooth', 'v4.2'),
-(10, 'Dimensions', '3.0 x 1.5 x 0.5 inches'),
-(10, 'Weight', '0.02 kg'),
--- Teensy 4.1 (11)
-(11, 'Microcontroller', 'ARM Cortex-M7'),
-(11, 'Flash Memory', '8MB'),
-(11, 'Clock Speed', '600 MHz'),
-(11, 'Digital I/O Pins', '55'),
-(11, 'Dimensions', '2.4 x 1.4 x 0.3 inches'),
-(11, 'Weight', '0.02 kg'),
--- NeuraFlow Suite (12)
-(12, 'CPU', 'Dual Intel Xeon'),
-(12, 'GPU', 'NVIDIA Tesla V100'),
-(12, 'RAM', '128GB DDR4'),
-(12, 'Storage', '5TB SSD'),
-(12, 'Dimensions', '18 x 10 x 7 inches'),
-(12, 'Weight', '15 kg'),
--- DeepStream AI Studio (13)
-(13, 'CPU', 'Intel i7'),
-(13, 'GPU', 'NVIDIA RTX 3080'),
-(13, 'RAM', '16GB DDR4'),
-(13, 'Storage', '1TB NVMe SSD'),
-(13, 'Dimensions', '16 x 8 x 5 inches'),
-(13, 'Weight', '10 kg');
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (1, 'SpectraForce', 1, '2025-05-21 16:36:55', 'The SpectraForce X Series represents the pinnacle of gaming graphics technology. These cards deliver unparalleled performance for AAA gaming titles at 4K resolution with ray tracing enabled. Built on the latest architecture, they offer exceptional power efficiency while maintaining cool temperatures even under heavy loads.', 1, 1, 'X-Series', 'SpectraForce X Series', 'SFX-12G-001', '2025-07-28 18:54:31.294676', 3.75);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (2, 'NovaCore', 1, '2025-05-21 16:36:55', 'NovaCore Vision cards are specially designed for content creators and professionals who demand reliability and performance. These workstation-class GPUs excel at 3D modeling, video editing, and complex CAD operations with certified drivers for all major professional applications.', 0, 0, 'Vision-Pro', 'NovaCore Vision', 'NCV-24G-001', '2025-05-29 06:10:35.938138', 3.0);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (3, 'ThunderCore', 1, '2025-05-21 16:36:55', 'The ThunderCore AI GPU is designed specifically for high-throughput AI, machine learning, and data center workloads. With large memory bandwidth and optimized compute performance, it accelerates deep learning tasks and data processing tasks.', 1, 0, 'AI-Series', 'ThunderCore AI GPU', 'TCG-32G-001', '2025-07-15 17:29:47.938569', 3.0);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (4, 'FusionRender', 1, '2025-05-21 16:36:55', 'FusionRender Series GPUs are engineered for the most demanding HPC and AI model training applications. These cards offer massive parallel processing power, ideal for simulations, large-scale model training, and scientific computing.', 1, 1, 'HPC-Series', 'FusionRender Series', 'FRS-48G-001', '2025-05-21 16:36:55', 3.0);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (5, 'QuantumMind', 2, '2025-05-21 16:36:55', 'QuantumMind Systems is a cutting-edge AI supercomputing platform, designed to accelerate deep learning and AI model training tasks. With multi-GPU configurations and optimized architecture, it empowers data scientists to handle complex workloads efficiently.', 1, 1, 'SuperCompute', 'QuantumMind Systems', 'QMS-8A-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (6, 'EdgeNexus', 2, '2025-05-21 16:36:55', 'EdgeNexus Platform is an AI-powered edge computing solution designed to optimize real-time data processing for IoT devices, robotics, and autonomous machines. It features low-latency computing and is ideal for edge AI deployments.', 1, 0, 'Edge-AI', 'EdgeNexus Platform', 'ENP-XV-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (7, 'Raspberry Pi', 3, '2025-05-21 16:36:55', 'The Raspberry Pi 4 is a versatile single-board computer ideal for DIY projects, education, and programming. With powerful features and connectivity, it can run multiple tasks simultaneously and is suitable for a range of applications.', 1, 1, 'Model 4B', 'RASPBERRY PI 4', 'RPI4-4G-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (8, 'Arduino', 4, '2025-05-21 16:36:55', 'The Arduino UNO is an open-source electronics platform used for building a wide range of interactive projects. With a microcontroller and simple programming environment, it''s a great tool for beginners and advanced makers alike.', 1, 1, 'UNO R3', 'ARDUINO UNO', 'ARDU-UNO-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (9, 'NVIDIA', 5, '2025-05-21 16:36:55', 'NVIDIA Jetson is an AI computing platform built for accelerating GPU-intensive applications at the edge. With its compact size and powerful capabilities, it is ideal for IoT, robotics, and AI at the edge.', 1, 1, 'Jetson Nano', 'NVIDIA JETSON', 'NVJ-NANO-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (10, 'Espressif', 6, '2025-05-21 16:36:55', 'The ESP32 Dev Kit is a powerful development board for building IoT applications with Wi-Fi and Bluetooth. It features dual-core processing and a range of peripherals for rapid prototyping.', 1, 1, 'ESP32', 'ESP32 DEV KIT', 'ESP32-DK-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (11, 'PJRC', 4, '2025-05-21 16:36:55', 'Teensy 4.1 is a USB-based development system with a powerful microcontroller that supports high-speed processing. It is ideal for audio processing, robotics, and advanced electronics projects.', 1, 1, 'Teensy 4.1', 'TEENSY 4.1', 'TNSY-41-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (12, 'NeuraFlow', 2, '2025-05-21 16:36:55', 'NeuraFlow Suite is a high-performance parallel computing platform and API built for accelerating AI workloads and large-scale data processing tasks. It provides efficient processing pipelines for AI systems.', 1, 0, 'V100-Series', 'NeuraFlow Suite', 'NFS-V100-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (13, 'DeepStream', 2, '2025-05-21 16:36:55', 'DeepStream AI Studio offers tools to build scalable AI-based video analytics applications for real-time processing in industries like retail, automotive, and security.', 1, 0, 'RTX-Series', 'DeepStream AI Studio', 'DSAI-3080-001', '2025-05-21 16:36:55', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (14, 'Apple', 1, '2025-05-21 18:44:10.056278', 'Good Iphone', 1, 0, 'Pro Max', 'iPhone 16', 'IP13P-254-BLK', '2025-06-11 06:21:58.377723', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (15, 'Apple', 1, '2025-05-28 16:51:08.218544', 'Latest iPhone model with advanced camera system', 1, 0, 'A2482', 'iPhone 16 Pro', 'IP13P-256-BLK', '2025-05-28 16:51:08.218544', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (17, 'eeee', 9, '2025-06-10 23:44:56.612684', 'wereww', 0, 0, 'eeee', 'Ademilton Marcelo Nunes', 'erfser', '2025-06-10 23:47:32.670707', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (18, 'eere', 1, '2025-06-10 23:46:50.299531', 'ersers', 0, 0, 'erserser', 'nenem', 'serserser', '2025-06-10 23:47:53.658334', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (19, 'eeee', 9, '2025-06-11 06:54:17.303936', 'sdfsdfsdfds', 1, 0, 'eeee', 'Test', 'wedeaszxcvf', '2025-06-11 06:54:17.303936', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (20, 'Test Brand', 7, '2025-06-16 15:39:42.996792', 'That is a test', 1, 0, 'Test Model', 'Test Product', '123-344-566', '2025-06-16 15:39:42.996792', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (22, 'Apple', 1, '2025-07-14 23:59:42.515177', 'Latest iPhone model with advanced camera system', 1, 0, 'A2482', 'iPhone 13 Pro2', 'IP13P-256-llll', '2025-07-14 23:59:42.515177', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (23, 'Apple', 1, '2025-07-15 00:00:36.102031', 'Latest iPhone model with advanced camera system', 1, 0, 'A2482', 'iPhone 13 Pro22', 'IP13P-256-kkk', '2025-07-15 00:00:36.102031', NULL);
+INSERT INTO `products` (`id`, `brand`, `category_id`, `created_at`, `description`, `is_active`, `is_featured`, `model`, `name`, `sku`, `updated_at`, `average_rating`) VALUES (25, 'Apple', 1, '2025-07-15 05:04:37.184849', 'Latest iPhone model with advanced camera system', 0, 0, 'A2482', 'iPhone 13 Pro224', 'IP13P-256-', '2025-07-15 05:29:51.320458', NULL);
 
 
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (1, 'https://m.media-amazon.com/images/I/71+PTOGv1mL.jpg', 0);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (2, 'https://i.extremetech.com/imagery/content-types/03jV5USras1qOUXTIGo7JIG/images-1.fill.size_670x377.v1691519408.png', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFqL92lAigcdIEnDZ8knLGr8LOfEu00cbvdg&s', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (4, 'https://www.networkworld.com/wp-content/uploads/2025/04/3966130-0-09907200-1745257104-original.jpg?quality=50&strip=all&w=1024', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (5, 'https://alleninstitute.org/wp-content/uploads/2024/05/Quantumconsciousness2-ezgif.com-crop.jpg', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (6, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuOClJEpPkQssrdbTc-UKxEQPQPr2VWKxdMA&s', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (7, 'https://m.media-amazon.com/images/I/616RFn6Jv5L._AC_UF894,1000_QL80_DpWeblab_.jpg', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (8, 'https://store.arduino.cc/cdn/shop/files/A000066_03.front_934x700.jpg?v=1727098250', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (9, 'https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/embedded%2Fimages%2FjetsonNano%2Fjetson_orin_nano-devkit-front_top-right-trimmed.jpg', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (10, 'https://m.media-amazon.com/images/I/61o2ZUzB4XL._AC_UF894,1000_QL80_.jpg', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (11, 'https://ca.robotshop.com/cdn/shop/files/teensy-41-usb-microcontroller-development-board-no-pins-2_1024x.webp?v=1720518161', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (12, 'https://framerusercontent.com/images/b1WgDKAkCoPT9IqxSwrM7xfxMl8.png', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (13, 'https://wpforms.com/wp-content/uploads/2024/08/google-ai-studio-logo.png', 1);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (14, 'https://m.media-amazon.com/images/I/71QkWOSDkmL.jpg', 0);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (15, 'https://hips.hearstapps.com/hmg-prod/images/iphone-16-pro-pro-max-009-66eb07f9da260.jpg?crop=0.784xw:0.696xh;0.0986xw,0.129xh&resize=1200', 0);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (17, '', 0);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (18, '', 0);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (19, '', 0);
+INSERT INTO `product_images` (`product_id`, `image_url`, `images_order`) VALUES (20, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUPIfiGgUML8G3ZqsNLHfaCnZK3I5g4tJabQ&s', 0);
 
--- Insert Product Images (make sure product_images has image_url column)
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '1.5 GHz', 'Base Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '1.8 GHz', 'Boost Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '5,888', 'CUDA Cores');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '11.2 x 4.4 x 1.5 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '12GB GDDR6X', 'Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '750W', 'Recommended PSU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '320W', 'TDP');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (1, '1.2 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, '1.3 GHz', 'Base Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, '1.7 GHz', 'Boost Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, '4,608', 'CUDA Cores');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, '12.5 x 5.5 x 1.7 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, 'Yes', 'ECC Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, '24GB GDDR6', 'Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, '300W', 'TDP');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (2, '1.4 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '1.4 GHz', 'Base Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '1.9 GHz', 'Boost Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '6,144', 'CUDA Cores');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '13 x 5.7 x 2.0 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '32GB GDDR6X', 'Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '850W', 'Recommended PSU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '350W', 'TDP');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (3, '1.8 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '1.2 GHz', 'Base Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '1.6 GHz', 'Boost Clock');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '8,192', 'CUDA Cores');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '14 x 6 x 2.5 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '48GB GDDR6', 'Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '1000W', 'Recommended PSU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '450W', 'TDP');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (4, '2.2 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (5, 'Dual Intel Xeon Gold 6230', 'CPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (5, '24 x 20 x 8 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (5, '8 x NVIDIA Tesla A100', 'GPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (5, '1TB DDR4 ECC', 'Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (5, '10TB SSD', 'Storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (5, '60 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (6, 'ARM Cortex-A76', 'CPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (6, '8 x 5 x 3 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (6, 'NVIDIA Jetson Xavier', 'GPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (6, '32GB LPDDR4', 'RAM');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (6, '256GB eMMC', 'Storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (6, '2.3 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (7, 'Quad-core ARM Cortex-A72', 'CPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (7, '3.4 x 2.2 x 1.1 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (7, 'Broadcom VideoCore VI', 'GPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (7, '4GB LPDDR4', 'RAM');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (7, 'microSD card slot', 'Storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (7, '0.06 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (8, '6', 'Analog I/O Pins');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (8, '16 MHz', 'Clock Speed');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (8, '14', 'Digital I/O Pins');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (8, '2.7 x 2.1 x 0.8 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (8, '32KB', 'Flash Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (8, 'ATmega328P', 'Microcontroller');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (8, '0.025 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (9, 'Quad-core ARM Cortex-A57', 'CPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (9, '3.5 x 3.2 x 1.1 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (9, 'NVIDIA Maxwell', 'GPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (9, '4GB LPDDR4', 'RAM');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (9, '16GB eMMC', 'Storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (9, '0.3 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (10, 'v4.2', 'Bluetooth');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (10, 'Dual-core Tensilica LX6', 'CPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (10, '3.0 x 1.5 x 0.5 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (10, '520KB SRAM', 'RAM');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (10, '4MB Flash', 'Storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (10, '0.02 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (10, '802.11 b/g/n', 'Wi-Fi');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (11, '600 MHz', 'Clock Speed');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (11, '55', 'Digital I/O Pins');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (11, '2.4 x 1.4 x 0.3 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (11, '8MB', 'Flash Memory');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (11, 'ARM Cortex-M7', 'Microcontroller');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (11, '0.02 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (12, 'Dual Intel Xeon', 'CPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (12, '18 x 10 x 7 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (12, 'NVIDIA Tesla V100', 'GPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (12, '128GB DDR4', 'RAM');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (12, '5TB SSD', 'Storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (12, '15 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (13, 'Intel i7', 'CPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (13, '16 x 8 x 5 inches', 'Dimensions');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (13, 'NVIDIA RTX 3080', 'GPU');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (13, '16GB DDR4', 'RAM');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (13, '1TB NVMe SSD', 'Storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (13, '10 kg', 'Weight');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (14, 'Red', 'color');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (14, '6GB', 'ram');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (14, '256GB', 'storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (15, 'Black', 'color');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (15, '256GB', 'ram');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (15, '256GB', 'storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (20, '40', 'Test1');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (22, 'Black', 'color');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (22, '6GB', 'ram');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (22, '256GB', 'storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (23, 'Black', 'color');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (23, '6GB', 'ram');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (23, '256GB', 'storage');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (25, 'Black', 'color');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (25, '6GB', 'ram');
+INSERT INTO `product_specifications` (`product_id`, `spec_value`, `spec_key`) VALUES (25, '256GB', 'storage');
 
-INSERT INTO product_images (product_id, image_url, images_order) VALUES
-(1, 'https://m.media-amazon.com/images/I/71+PTOGv1mL.jpg', 1),
-(2, 'https://i.extremetech.com/imagery/content-types/03jV5USras1qOUXTIGo7JIG/images-1.fill.size_670x377.v1691519408.png', 1),
-(3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFqL92lAigcdIEnDZ8knLGr8LOfEu00cbvdg&s', 1),
-(4, 'https://www.networkworld.com/wp-content/uploads/2025/04/3966130-0-09907200-1745257104-original.jpg?quality=50&strip=all&w=1024', 1),
-(5, 'https://alleninstitute.org/wp-content/uploads/2024/05/Quantumconsciousness2-ezgif.com-crop.jpg', 1),
-(6, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuOClJEpPkQssrdbTc-UKxEQPQPr2VWKxdMA&s', 1),
-(7, 'https://m.media-amazon.com/images/I/616RFn6Jv5L._AC_UF894,1000_QL80_DpWeblab_.jpg', 1),
-(8, 'https://store.arduino.cc/cdn/shop/files/A000066_03.front_934x700.jpg?v=1727098250', 1),
-(9, 'https://d29g4g2dyqv443.cloudfront.net/sites/default/files/akamai/embedded%2Fimages%2FjetsonNano%2Fjetson_orin_nano-devkit-front_top-right-trimmed.jpg', 1),
-(10, 'https://m.media-amazon.com/images/I/61o2ZUzB4XL._AC_UF894,1000_QL80_.jpg', 1),
-(11, 'https://ca.robotshop.com/cdn/shop/files/teensy-41-usb-microcontroller-development-board-no-pins-2_1024x.webp?v=1720518161', 1),
-(12, 'https://framerusercontent.com/images/b1WgDKAkCoPT9IqxSwrM7xfxMl8.png', 1),
-(13, 'https://wpforms.com/wp-content/uploads/2024/08/google-ai-studio-logo.png', 1);
-
--- Insert Inventories
-INSERT INTO inventories (product_id, available_quantity, reserved_quantity, sold_quantity, price, currency, active, created_at, updated_at) VALUES
-(1, 10, 0, 0, 799.99, 'USD', TRUE, NOW(), NOW()),
-(2, 10, 0, 0, 999.99, 'USD', TRUE, NOW(), NOW()),
-(3, 10, 0, 0, 1499.99, 'USD', TRUE, NOW(), NOW()),
-(4, 10, 0, 0, 2000.00, 'USD', TRUE, NOW(), NOW()),
-(5, 5, 0, 0, 50000.00, 'USD', TRUE, NOW(), NOW()),
-(6, 5, 0, 0, 10000.00, 'USD', TRUE, NOW(), NOW()),
-(7, 50, 0, 0, 45.99, 'USD', TRUE, NOW(), NOW()),
-(8, 100, 0, 0, 23.50, 'USD', TRUE, NOW(), NOW()),
-(9, 25, 0, 0, 99.99, 'USD', TRUE, NOW(), NOW()),
-(10, 75, 0, 0, 12.95, 'USD', TRUE, NOW(), NOW()),
-(11, 100, 0, 0, 29.95, 'USD', TRUE, NOW(), NOW()),
-(12, 5, 0, 0, 699.99, 'USD', TRUE, NOW(), NOW()),
-(13, 5, 0, 0, 999.99, 'USD', TRUE, NOW(), NOW());
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (1, 1, '7.00', '2025-05-21 16:38:21', 'USD', '999.99', '0.00', '5.00', '2025-09-03 05:57:59.344167', 1, '1.00');
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (2, 1, '10.00', '2025-05-21 16:38:21', 'USD', '999.99', '0.00', '0.00', '2025-05-21 16:38:21', 2, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (3, 1, '5.00', '2025-05-21 16:38:21', 'USD', '1499.99', '0.00', '5.00', '2025-08-28 21:32:42.442103', 3, '5.00');
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (4, 1, '8.00', '2025-05-21 16:38:21', 'USD', '2000.00', '0.00', '2.00', '2025-08-18 17:49:49.026041', 4, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (5, 1, '3.00', '2025-05-21 16:38:21', 'USD', '50000.00', '0.00', '2.00', '2025-08-25 15:35:40.070878', 5, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (6, 1, '5.00', '2025-05-21 16:38:21', 'USD', '10000.00', '0.00', '0.00', '2025-08-18 17:49:58.191747', 6, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (7, 1, '45.00', '2025-05-21 16:38:21', 'USD', '45.99', '0.00', '5.00', '2025-09-02 17:10:36.831420', 7, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (8, 1, '95.00', '2025-05-21 16:38:21', 'USD', '23.50', '0.00', '5.00', '2025-09-03 15:37:24.912110', 8, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (9, 1, '23.00', '2025-05-21 16:38:21', 'USD', '99.99', '0.00', '2.00', '2025-09-02 06:33:16.031503', 9, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (10, 1, '75.00', '2025-05-21 16:38:21', 'USD', '12.95', '0.00', '0.00', '2025-08-18 17:50:00.265392', 10, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (11, 1, '98.00', '2025-05-21 16:38:21', 'USD', '29.95', '0.00', '2.00', '2025-09-03 05:54:37.040465', 11, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (12, 1, '3.00', '2025-05-21 16:38:21', 'USD', '699.99', '1.00', '1.00', '2025-09-03 15:55:43.029369', 12, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (13, 1, '4.00', '2025-05-21 16:38:21', 'USD', '999.99', '0.00', '1.00', '2025-08-20 17:24:08.225807', 13, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (14, 1, '10.00', '2025-05-29 06:22:57.286373', 'USD', '999.99', '0.00', '0.00', '2025-05-29 06:25:51.344986', 15, '5.00');
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (15, 1, '1.00', '2025-06-11 05:58:49.902741', 'USD', '80.00', '0.00', '0.00', '2025-06-11 06:02:41.482551', 14, '1.00');
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (16, 1, '0.00', '2025-06-11 06:55:13.323087', 'USD', '2.00', '0.00', '2.00', '2025-09-03 05:42:09.553888', 19, NULL);
+INSERT INTO `inventories` (`id`, `active`, `available_quantity`, `created_at`, `currency`, `price`, `reserved_quantity`, `sold_quantity`, `updated_at`, `product_id`, `max_quantity_per_purchase`) VALUES (17, 1, '30.00', '2025-06-16 15:40:32.244098', 'USD', '400.00', '0.00', '0.00', NULL, 20, '1.00');
 
 
--- Insert Initial Inventory Logs
-INSERT INTO inventory_logs (inventory_id, action_type, quantity, description, created_by, created_at) 
-SELECT id, 'RESTOCK', available_quantity, 'Initial stock created', 'SYSTEM', NOW() FROM inventories;
-
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (23, 'test', '2025-07-15 17:23:09.213315', 2, '2025-07-15 17:25:11.910111', 12, 1);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (25, 'Amazing quality!', '2025-07-22 20:29:29', 5, '2025-07-22 20:29:29', 10, 1);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (26, 'Pretty decent product.', '2025-07-22 20:29:29', 4, '2025-07-22 20:29:29', 11, 1);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (28, 'Terrible experience.', '2025-07-22 20:29:29', 1, '2025-07-22 20:29:29', 13, 1);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (29, 'Works as expected.', '2025-07-22 20:29:29', 3, '2025-07-22 20:29:29', 14, 1);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (30, 'Loved the performance.', '2025-07-22 20:31:04', 5, '2025-07-22 20:31:04', 10, 2);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (31, 'Pretty good overall.', '2025-07-22 20:31:04', 4, '2025-07-22 20:31:04', 11, 2);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (32, 'Average quality.', '2025-07-22 20:31:04', 3, '2025-07-22 20:31:04', 12, 2);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (33, 'Could be better.', '2025-07-22 20:31:04', 2, '2025-07-22 20:31:04', 13, 2);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (34, 'Did not like it.', '2025-07-22 20:31:04', 1, '2025-07-22 20:31:04', 14, 2);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (35, 'Blazing fast GPU.', '2025-07-22 20:31:09', 5, '2025-07-22 20:31:09', 10, 3);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (36, 'Nice for gaming.', '2025-07-22 20:31:09', 4, '2025-07-22 20:31:09', 11, 3);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (37, 'Heats up quickly.', '2025-07-22 20:31:09', 3, '2025-07-22 20:31:09', 12, 3);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (38, 'Too noisy.', '2025-07-22 20:31:09', 2, '2025-07-22 20:31:09', 13, 3);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (39, 'Waste of money.', '2025-07-22 20:31:09', 1, '2025-07-22 20:31:09', 14, 3);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (40, 'Superb design.', '2025-07-22 20:31:18', 5, '2025-07-22 20:31:18', 10, 4);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (41, 'Efficient performance.', '2025-07-22 20:31:18', 4, '2025-07-22 20:31:18', 11, 4);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (42, 'Good, but expensive.', '2025-07-22 20:31:18', 3, '2025-07-22 20:31:18', 12, 4);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (43, 'Slow delivery.', '2025-07-22 20:31:18', 2, '2025-07-22 20:31:18', 13, 4);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (44, 'Item came damaged.', '2025-07-22 20:31:18', 1, '2025-07-22 20:31:18', 14, 4);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (45, 'I like it', '2025-07-23 06:46:08.919590', 5, '2025-07-23 06:46:08.919660', 12, 1);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (46, 'Good!', '2025-07-23 06:48:35.293393', 5, '2025-07-23 06:48:35.293454', 12, 1);
+INSERT INTO `reviews` (`id`, `comment`, `created_at`, `rating`, `updated_at`, `user_id`, `product_id`) VALUES (47, 'Okay', '2025-07-23 06:48:50.115412', 5, '2025-07-23 06:49:24.037228', 12, 1);
