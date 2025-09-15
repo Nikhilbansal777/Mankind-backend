@@ -1,6 +1,5 @@
 package com.mankind.api.user.dto;
 
-
 import com.mankind.api.user.enums.Role;
 import lombok.Data;
 
@@ -9,11 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Deprecated: use UserResponseDTO for responses.
+ * Response DTO for exposing user information.
  */
-@Deprecated
 @Data
-public class UserDTO {
+public class UserResponseDTO {
     private Long id;
     private String username;
     private Role role;
