@@ -8,10 +8,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Deprecated: use UserResponseDTO for responses.
- */
-@Deprecated
 @Data
 public class UserDTO {
     private Long id;

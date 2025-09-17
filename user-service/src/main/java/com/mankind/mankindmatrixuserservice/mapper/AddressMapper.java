@@ -1,6 +1,6 @@
 package com.mankind.mankindmatrixuserservice.mapper;
 
-import com.mankind.api.user.dto.AddressResponseDTO;
+import com.mankind.api.user.dto.AddressDTO;
 import com.mankind.api.user.dto.CreateAddressDTO;
 import com.mankind.api.user.dto.UpdateAddressDTO;
 import com.mankind.mankindmatrixuserservice.model.Address;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class AddressMapper {
 
-    public AddressResponseDTO toDto(Address address) {
+    public AddressDTO toDto(Address address) {
         if (address == null) {
             return null;
         }
 
-        AddressResponseDTO dto = new AddressResponseDTO();
+        AddressDTO dto = new AddressDTO();
         dto.setId(address.getId());
         dto.setUserId(address.getUser().getId());
         dto.setAddressType(address.getAddressType());
