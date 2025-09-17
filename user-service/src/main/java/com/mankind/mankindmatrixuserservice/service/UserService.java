@@ -3,7 +3,7 @@ package com.mankind.mankindmatrixuserservice.service;
 import com.mankind.api.user.dto.AuthRequest;
 import com.mankind.api.user.dto.AuthResponse;
 import com.mankind.api.user.dto.UpdateUserDTO;
-import com.mankind.api.user.dto.UserResponseDTO;
+import com.mankind.api.user.dto.UserDTO;
 import com.mankind.api.user.dto.UserRegistrationDTO;
 import com.mankind.mankindmatrixuserservice.exception.UserNotFoundException;
 import com.mankind.mankindmatrixuserservice.mapper.UserMapper;
@@ -49,7 +49,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDTO register(UserRegistrationDTO registrationDTO) {
+    public UserDTO register(UserRegistrationDTO registrationDTO) {
         // Validate password strength
         passwordValidationService.validatePassword(registrationDTO.getPassword());
 
@@ -100,19 +100,19 @@ public class UserService {
         return tokenService.revokeRefreshToken(refreshToken);
     }
 
-    public UserResponseDTO getUserById(Long id) {
+    public UserDTO getUserById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
     }
 
-    public List<UserResponseDTO> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(userMapper::toDto)
                 .toList();
     }
 
-    public List<UserResponseDTO> getUsersByIds(List<Long> userIds) {
+    public List<UserDTO> getUsersByIds(List<Long> userIds) {
         return userRepository.findAllById(userIds).stream()
                 .map(userMapper::toDto)
                 .toList();

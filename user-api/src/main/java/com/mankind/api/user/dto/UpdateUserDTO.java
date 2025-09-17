@@ -1,7 +1,5 @@
 package com.mankind.api.user.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -10,13 +8,8 @@ import lombok.Data;
  */
 @Data
 public class UpdateUserDTO {
-    @Size(max = 100)
     private String firstName;
-    @Size(max = 100)
     private String lastName;
-    @Email
-    @Size(max = 255)
     private String email;
-    @Size(max = 500)
     private String profilePictureUrl;
 }

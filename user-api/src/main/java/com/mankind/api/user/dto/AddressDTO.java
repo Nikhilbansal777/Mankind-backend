@@ -5,10 +5,6 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-/**
- * Deprecated: use AddressResponseDTO for responses.
- */
-@Deprecated
 @Data
 public class AddressDTO {
     private Long id;
