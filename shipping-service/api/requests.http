@@ -1,0 +1,84 @@
+### Order Service API Requests
+
+# Create a new order with all fields
+POST http://localhost:8088/orders
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "shippingAddressId": 1,
+  "shippingValue": 15.99,
+  "couponCode": "SAVE20",
+  "notes": "Please deliver to the front door",
+  "deliveryType": "EXPRESS",
+  "shippingDate": "2024-12-25"
+}
+
+###
+
+# Create order with standard delivery
+POST http://localhost:8088/orders
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "shippingAddressId": 1,
+  "shippingValue": 8.99,
+  "deliveryType": "STANDARD",
+  "shippingDate": "2024-12-30"
+}
+
+###
+
+# Create order without coupon
+POST http://localhost:8088/orders
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "shippingAddressId": 1,
+  "shippingValue": 12.50,
+  "notes": "Gift wrapping requested",
+  "deliveryType": "STANDARD",
+  "shippingDate": "2024-12-28"
+}
+
+###
+
+# Update existing order (same cart, different data)
+POST http://localhost:8088/orders
+Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+  "shippingAddressId": 2,
+  "shippingValue": 20.00,
+  "couponCode": "FREESHIP",
+  "notes": "Changed to express delivery",
+  "deliveryType": "EXPRESS",
+  "shippingDate": "2024-12-24"
+}
+
+###
+
+# Get user orders
+GET http://localhost:8088/orders?page=0&size=10
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# Get specific order
+GET http://localhost:8088/orders/1
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# Pay order
+POST http://localhost:8088/orders/1/pay
+Authorization: Bearer {{jwt_token}}
+
+###
+
+# Cancel order
+DELETE http://localhost:8088/orders/1
+Authorization: Bearer {{jwt_token}}
