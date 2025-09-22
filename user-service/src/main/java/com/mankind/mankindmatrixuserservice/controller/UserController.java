@@ -130,7 +130,7 @@ public class UserController {
             )
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<UserDTO> getUser(
             @Parameter(description = "ID of the user to retrieve") @PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
@@ -203,7 +203,7 @@ public class UserController {
             )
     })
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
@@ -310,7 +310,7 @@ public class UserController {
             )
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<UpdateUserDTO> updateUser(
             @Parameter(description = "ID of the user to update") @PathVariable Long id,
             @Parameter(description = "Updated user information") @RequestBody UpdateUserDTO updateUserDTO) {
@@ -392,7 +392,7 @@ public class UserController {
             )
     })
     @GetMapping("/{userId}/addresses")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<List<AddressDTO>> getUserAddresses(
             @Parameter(description = "ID of the user whose addresses to retrieve") @PathVariable Long userId) {
         return ResponseEntity.ok(addressService.getAddressesByUserId(userId));
@@ -454,7 +454,7 @@ public class UserController {
             )
     })
     @GetMapping("/{userId}/addresses/{addressId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<AddressDTO> getUserAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "ID of the address to retrieve") @PathVariable Long addressId) {
@@ -563,7 +563,7 @@ public class UserController {
             )
     })
     @PostMapping("/{userId}/addresses")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<AddressDTO> createAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "Address details") @RequestBody CreateAddressDTO createAddressDTO) {
@@ -663,7 +663,7 @@ public class UserController {
             )
     })
     @PutMapping("/{userId}/addresses/{addressId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<AddressDTO> updateAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "ID of the address to update") @PathVariable Long addressId,
@@ -723,7 +723,7 @@ public class UserController {
             )
     })
     @DeleteMapping("/{userId}/addresses/{addressId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<Void> deleteAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "ID of the address to delete") @PathVariable Long addressId) {
