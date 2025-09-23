@@ -1,6 +1,10 @@
 package com.mankind.api.user.dto;
 
+import com.mankind.api.user.enums.Role;
 import lombok.Data;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DTO specifically for updating user details.
@@ -8,8 +12,11 @@ import lombok.Data;
  */
 @Data
 public class UpdateUserDTO {
+    private String username;
+    private String email;
     private String firstName;
     private String lastName;
-    private String email;
+    private Map<String,String> customAttributes = new HashMap<>();
+    private Role role;
     private String profilePictureUrl;
 }

@@ -221,19 +221,26 @@ public class UserController {
             - Can update any user's data
             
             ## Updateable Fields:
+            - Username (must be unique)
+            - Email (must be unique)
             - First name
             - Last name
-            - Email (must be unique)
+            - Role (ADMIN or USER)
+            - Custom attributes (key-value pairs)
             - Profile picture URL
             
             ## Validation:
+            - Username uniqueness check
             - Email format validation
             - Email uniqueness check
             - Required field validation
             
             ## Note:
             - Admin can update any user's profile
-            - Email changes are validated for uniqueness across all users
+            - Username and email changes are validated for uniqueness across all users
+            - Role changes are allowed (ADMIN can promote/demote users)
+            - Custom attributes can be updated or replaced entirely
+            - Update time is automatically set when any field is modified
             """,
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Updated user information",
@@ -247,9 +254,15 @@ public class UserController {
                         description = "Update user profile as admin",
                         value = """
                             {
-                                "firstName": "John Updated",
-                                "lastName": "Doe Updated",
-                                "email": "john.updated@example.com",
+                                "username": "john.doe",
+                                "email": "john.doe@example.com",
+                                "firstName": "John",
+                                "lastName": "Doe",
+                                "role": "USER",
+                                "customAttributes": {
+                                    "phone": "+1234567890",
+                                    "preferredLanguage": "en"
+                                },
                                 "profilePictureUrl": "https://example.com/new-avatar.jpg"
                             }
                             """
@@ -269,9 +282,15 @@ public class UserController {
                             name = "Success Response",
                             value = """
                                 {
-                                    "firstName": "John Updated",
-                                    "lastName": "Doe Updated",
-                                    "email": "john.updated@example.com",
+                                    "username": "john.doe",
+                                    "email": "john.doe@example.com",
+                                    "firstName": "John",
+                                    "lastName": "Doe",
+                                    "role": "USER",
+                                    "customAttributes": {
+                                        "phone": "+1234567890",
+                                        "preferredLanguage": "en"
+                                    },
                                     "profilePictureUrl": "https://example.com/new-avatar.jpg"
                                 }
                                 """
@@ -293,17 +312,28 @@ public class UserController {
             ),
             @ApiResponse(
                 responseCode = "409", 
-                description = "Conflict - Email already in use",
+                description = "Conflict - Email or Username already in use",
                 content = @Content(
                     examples = {
                         @ExampleObject(
-                            name = "Conflict Error",
+                            name = "Email Conflict Error",
                             value = """
                                 {
                                     "timestamp": "2024-01-15T10:30:00",
                                     "status": 409,
                                     "error": "Conflict",
                                     "message": "Email already in use"
+                                }
+                                """
+                        ),
+                        @ExampleObject(
+                            name = "Username Conflict Error",
+                            value = """
+                                {
+                                    "timestamp": "2024-01-15T10:30:00",
+                                    "status": 409,
+                                    "error": "Conflict",
+                                    "message": "Username already in use"
                                 }
                                 """
                         )

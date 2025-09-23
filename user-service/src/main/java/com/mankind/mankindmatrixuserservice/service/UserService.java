@@ -152,6 +152,27 @@ public class UserService {
             updateKeycloak = true;
         }
 
+        // Update username if provided and different
+        if (updateUserDTO.getUsername() != null && !updateUserDTO.getUsername().equals(existingUser.getUsername())) {
+            if (userRepository.existsByUsername(updateUserDTO.getUsername())) {
+                throw new DataIntegrityViolationException("Username already in use");
+            }
+            existingUser.setUsername(updateUserDTO.getUsername());
+            updateKeycloak = true;
+        }
+
+        // Update role if provided
+        if (updateUserDTO.getRole() != null) {
+            existingUser.setRole(updateUserDTO.getRole());
+            updateKeycloak = true;
+        }
+
+        // Update custom attributes if provided
+        if (updateUserDTO.getCustomAttributes() != null && !updateUserDTO.getCustomAttributes().isEmpty()) {
+            existingUser.setCustomAttributes(updateUserDTO.getCustomAttributes());
+            updateKeycloak = true;
+        }
+
         // Only update profilePictureUrl if present in the DTO
         if (updateUserDTO.getProfilePictureUrl() != null) {
             existingUser.setProfilePictureUrl(updateUserDTO.getProfilePictureUrl());
