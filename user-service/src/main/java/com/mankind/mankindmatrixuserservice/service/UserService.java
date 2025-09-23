@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class UserService {
@@ -106,10 +108,9 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
     }
 
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toDto)
-                .toList();
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(userMapper::toDto);
     }
 
     public List<UserDTO> getUsersByIds(List<Long> userIds) {
@@ -148,6 +149,27 @@ public class UserService {
             }
             existingUser.setEmail(updateUserDTO.getEmail());
             newEmail = updateUserDTO.getEmail();
+            updateKeycloak = true;
+        }
+
+        // Update username if provided and different
+        if (updateUserDTO.getUsername() != null && !updateUserDTO.getUsername().equals(existingUser.getUsername())) {
+            if (userRepository.existsByUsername(updateUserDTO.getUsername())) {
+                throw new DataIntegrityViolationException("Username already in use");
+            }
+            existingUser.setUsername(updateUserDTO.getUsername());
+            updateKeycloak = true;
+        }
+
+        // Update role if provided
+        if (updateUserDTO.getRole() != null) {
+            existingUser.setRole(updateUserDTO.getRole());
+            updateKeycloak = true;
+        }
+
+        // Update custom attributes if provided
+        if (updateUserDTO.getCustomAttributes() != null && !updateUserDTO.getCustomAttributes().isEmpty()) {
+            existingUser.setCustomAttributes(updateUserDTO.getCustomAttributes());
             updateKeycloak = true;
         }
 

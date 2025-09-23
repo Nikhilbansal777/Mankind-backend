@@ -1,6 +1,7 @@
 package com.mankind.mankindmatrixuserservice.service;
 
 import com.mankind.mankindmatrixuserservice.model.User;
+import com.mankind.api.user.enums.Role;
 import com.mankind.mankindmatrixuserservice.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,19 +58,13 @@ public class UserContextService {
     }
 
     /**
-     * Check if the current user has a specific role
-     */
-    public boolean hasRole(String role) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + role));
-    }
-
-    /**
      * Check if the current user is an admin
      */
     public boolean isAdmin() {
-        return hasRole("ADMIN");
+        return getCurrentUser()
+                .map(User::getRole)
+                .map(r -> r == Role.ADMIN)
+                .orElse(false);
     }
 
     /**
