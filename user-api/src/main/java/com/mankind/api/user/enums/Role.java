@@ -3,5 +3,6 @@ package com.mankind.api.user.enums;
 public enum Role {
     ADMIN,
     USER,
-    SUPER_ADMIN
+    SUPER_ADMIN,
+    CORPORATE
 }
