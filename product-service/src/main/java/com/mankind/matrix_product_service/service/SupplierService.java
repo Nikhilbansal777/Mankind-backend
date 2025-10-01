@@ -2,10 +2,12 @@ package com.mankind.matrix_product_service.service;
 
 import com.mankind.api.product.dto.supplier.SupplierDTO;
 import com.mankind.api.product.dto.supplier.SupplierResponseDTO;
+import com.mankind.api.product.dto.supplier.SupplierDashboardDTO;
 import com.mankind.matrix_product_service.exception.ResourceNotFoundException;
 import com.mankind.matrix_product_service.mapper.SupplierMapper;
 import com.mankind.matrix_product_service.model.Supplier;
 import com.mankind.matrix_product_service.repository.SupplierRepository;
+import com.mankind.matrix_product_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class SupplierService {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
+    private final ProductRepository productRepository;
 
     @Transactional
     public SupplierResponseDTO createSupplier(SupplierDTO supplierDTO) {
@@ -79,6 +82,26 @@ public class SupplierService {
         supplierRepository.save(supplier);
         
         log.info("Supplier marked as inactive with ID: {}", id);
+    }
+
+    @Transactional(readOnly = true)
+    public SupplierDashboardDTO getSupplierDashboard(Long id) {
+        Supplier supplier = supplierRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found with ID: " + id));
+
+        long total = productRepository.countBySuppliers_Id(id);
+        long active = productRepository.countBySuppliers_IdAndIsActiveTrue(id);
+        long inactive = productRepository.countBySuppliers_IdAndIsActiveFalse(id);
+
+        return SupplierDashboardDTO.builder()
+                .supplierId(supplier.getId())
+                .supplierName(supplier.getName())
+                .totalProducts(total)
+                .activeProducts(active)
+                .inactiveProducts(inactive)
+                .createdAt(supplier.getCreatedAt())
+                .updatedAt(supplier.getUpdatedAt())
+                .build();
     }
 
     private void validateSupplierName(String name, Long supplierId) {

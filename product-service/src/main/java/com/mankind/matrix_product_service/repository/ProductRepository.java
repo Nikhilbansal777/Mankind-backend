@@ -17,5 +17,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByNameAndCategoryId(String name, Long categoryId);
     boolean existsByNameAndCategoryIdAndIdNot(String name, Long categoryId, Long id);
     Page<Product> findByIsFeaturedTrueAndIsActiveTrue(Pageable pageable);
+
+    // Dashboard metrics for suppliers
+    long countBySuppliers_Id(Long supplierId);
+    long countBySuppliers_IdAndIsActiveTrue(Long supplierId);
+    long countBySuppliers_IdAndIsActiveFalse(Long supplierId);
 }
 

@@ -2,6 +2,7 @@ package com.mankind.matrix_product_service.controller;
 
 import com.mankind.api.product.dto.supplier.SupplierDTO;
 import com.mankind.api.product.dto.supplier.SupplierResponseDTO;
+import com.mankind.api.product.dto.supplier.SupplierDashboardDTO;
 import com.mankind.matrix_product_service.service.SupplierService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -101,5 +102,19 @@ public class SupplierController {
             @PathVariable Long id) {
         supplierService.deleteSupplier(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Get supplier dashboard", description = "Retrieves dashboard metrics for a supplier including product counts")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved dashboard",
+                content = @Content(schema = @Schema(implementation = SupplierDashboardDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Supplier not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/{id}/dashboard")
+    public ResponseEntity<SupplierDashboardDTO> getSupplierDashboard(
+            @Parameter(description = "ID of the supplier to retrieve dashboard for", required = true)
+            @PathVariable Long id) {
+        return ResponseEntity.ok(supplierService.getSupplierDashboard(id));
     }
 }
