@@ -44,6 +44,14 @@ spring:
           filters:
             - RewritePath=/api/v1/users/me/(?<segment>.*), /users/me/${segment}
 
+        # Explicit route for /api/v1/users (no trailing slash)
+        - id: users-root
+          uri: ${USER_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/users
+          filters:
+            - SetPath=/users
+
         - id: users-admin
           uri: ${USER_SERVICE_URL:http://localhost:8081}
           predicates:

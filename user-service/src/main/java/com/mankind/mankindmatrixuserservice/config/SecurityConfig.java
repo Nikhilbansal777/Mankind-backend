@@ -37,8 +37,8 @@ public class SecurityConfig {
                         // Batch user lookup - require authentication (not admin)
                         .requestMatchers(HttpMethod.GET, "/users/batch").authenticated()
                         
-                        // Admin endpoints - require ADMIN role
-                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        // Admin endpoints: require authentication;
+                        .requestMatchers("/users/**").authenticated()
                         
                         // Default: require authentication
                         .anyRequest().authenticated()

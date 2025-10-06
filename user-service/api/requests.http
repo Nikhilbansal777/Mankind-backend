@@ -53,9 +53,16 @@ Accept: application/json
 Authorization: Bearer {{token}}
 
 {
+  "username": "updated.user",
+  "email": "updated.email@example.com",
   "firstName": "UpdatedFirstName",
   "lastName": "UpdatedLastName",
-  "email": "updated.email@example.com"
+  "role": "USER",
+  "customAttributes": {
+    "phone": "+1234567890",
+    "preferredLanguage": "en"
+  },
+  "profilePictureUrl": "https://example.com/avatar.jpg"
 }
 
 ### Test Update User with Invalid Fields (should be ignored)
@@ -65,11 +72,16 @@ Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW1wbGVVc2VyIiwiaWF0IjoxNzQ3MTkxNTM4LCJleHAiOjE3NDcyNzc5Mzh9.U3EKjp9Y6H4cE2kv_SWXi8_vVffwn1apKqYHw-fJNRE
 
 {
+  "username": "arjun.sura",
   "firstName": "Arjun",
   "lastName": "Sura",
   "email": "arjun.email@example.com",
-  "profilePictureUrl": "N/A"
-
+  "role": "ADMIN",
+  "customAttributes": {
+    "phone": "+9876543210",
+    "department": "Engineering"
+  },
+  "profilePictureUrl": "https://example.com/arjun-avatar.jpg"
 }
 
 ### Get User Addresses

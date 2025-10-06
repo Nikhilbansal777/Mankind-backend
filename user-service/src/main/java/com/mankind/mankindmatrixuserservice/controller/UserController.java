@@ -25,6 +25,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/users")
@@ -130,7 +132,7 @@ public class UserController {
             )
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<UserDTO> getUser(
             @Parameter(description = "ID of the user to retrieve") @PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
@@ -203,9 +205,9 @@ public class UserController {
             )
     })
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    @PreAuthorize("@userContextService.isAdmin()")
+    public ResponseEntity<Page<UserDTO>> getAllUsers(Pageable pageable) {
+        return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
     @Operation(
@@ -219,19 +221,26 @@ public class UserController {
             - Can update any user's data
             
             ## Updateable Fields:
+            - Username (must be unique)
+            - Email (must be unique)
             - First name
             - Last name
-            - Email (must be unique)
+            - Role (ADMIN or USER)
+            - Custom attributes (key-value pairs)
             - Profile picture URL
             
             ## Validation:
+            - Username uniqueness check
             - Email format validation
             - Email uniqueness check
             - Required field validation
             
             ## Note:
             - Admin can update any user's profile
-            - Email changes are validated for uniqueness across all users
+            - Username and email changes are validated for uniqueness across all users
+            - Role changes are allowed (ADMIN can promote/demote users)
+            - Custom attributes can be updated or replaced entirely
+            - Update time is automatically set when any field is modified
             """,
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Updated user information",
@@ -245,9 +254,15 @@ public class UserController {
                         description = "Update user profile as admin",
                         value = """
                             {
-                                "firstName": "John Updated",
-                                "lastName": "Doe Updated",
-                                "email": "john.updated@example.com",
+                                "username": "john.doe",
+                                "email": "john.doe@example.com",
+                                "firstName": "John",
+                                "lastName": "Doe",
+                                "role": "USER",
+                                "customAttributes": {
+                                    "phone": "+1234567890",
+                                    "preferredLanguage": "en"
+                                },
                                 "profilePictureUrl": "https://example.com/new-avatar.jpg"
                             }
                             """
@@ -267,9 +282,15 @@ public class UserController {
                             name = "Success Response",
                             value = """
                                 {
-                                    "firstName": "John Updated",
-                                    "lastName": "Doe Updated",
-                                    "email": "john.updated@example.com",
+                                    "username": "john.doe",
+                                    "email": "john.doe@example.com",
+                                    "firstName": "John",
+                                    "lastName": "Doe",
+                                    "role": "USER",
+                                    "customAttributes": {
+                                        "phone": "+1234567890",
+                                        "preferredLanguage": "en"
+                                    },
                                     "profilePictureUrl": "https://example.com/new-avatar.jpg"
                                 }
                                 """
@@ -291,11 +312,11 @@ public class UserController {
             ),
             @ApiResponse(
                 responseCode = "409", 
-                description = "Conflict - Email already in use",
+                description = "Conflict - Email or Username already in use",
                 content = @Content(
                     examples = {
                         @ExampleObject(
-                            name = "Conflict Error",
+                            name = "Email Conflict Error",
                             value = """
                                 {
                                     "timestamp": "2024-01-15T10:30:00",
@@ -304,13 +325,24 @@ public class UserController {
                                     "message": "Email already in use"
                                 }
                                 """
+                        ),
+                        @ExampleObject(
+                            name = "Username Conflict Error",
+                            value = """
+                                {
+                                    "timestamp": "2024-01-15T10:30:00",
+                                    "status": 409,
+                                    "error": "Conflict",
+                                    "message": "Username already in use"
+                                }
+                                """
                         )
                     }
                 )
             )
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<UpdateUserDTO> updateUser(
             @Parameter(description = "ID of the user to update") @PathVariable Long id,
             @Parameter(description = "Updated user information") @RequestBody UpdateUserDTO updateUserDTO) {
@@ -392,7 +424,7 @@ public class UserController {
             )
     })
     @GetMapping("/{userId}/addresses")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<List<AddressDTO>> getUserAddresses(
             @Parameter(description = "ID of the user whose addresses to retrieve") @PathVariable Long userId) {
         return ResponseEntity.ok(addressService.getAddressesByUserId(userId));
@@ -454,7 +486,7 @@ public class UserController {
             )
     })
     @GetMapping("/{userId}/addresses/{addressId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<AddressDTO> getUserAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "ID of the address to retrieve") @PathVariable Long addressId) {
@@ -563,7 +595,7 @@ public class UserController {
             )
     })
     @PostMapping("/{userId}/addresses")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<AddressDTO> createAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "Address details") @RequestBody CreateAddressDTO createAddressDTO) {
@@ -663,7 +695,7 @@ public class UserController {
             )
     })
     @PutMapping("/{userId}/addresses/{addressId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<AddressDTO> updateAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "ID of the address to update") @PathVariable Long addressId,
@@ -723,7 +755,7 @@ public class UserController {
             )
     })
     @DeleteMapping("/{userId}/addresses/{addressId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("@userContextService.isAdmin()")
     public ResponseEntity<Void> deleteAddress(
             @Parameter(description = "ID of the user") @PathVariable Long userId,
             @Parameter(description = "ID of the address to delete") @PathVariable Long addressId) {
