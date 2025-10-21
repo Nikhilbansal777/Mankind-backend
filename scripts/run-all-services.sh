@@ -5,6 +5,10 @@
 
 echo "🚀 Starting Mankind Matrix AI Backend Services..."
 
+# Load environment variables from root .env file
+echo "📋 Loading environment variables..."
+set -a && source .env && set +a
+
 # Ports used by the services (including Keycloak)
 PORTS=(8180 8080 8081 8082 8083 8084 8085 8086 8087 8088)
 

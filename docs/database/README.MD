@@ -164,3 +164,88 @@ The test will:
    - Verify VPC and security group settings
    - Check if instance is publicly accessible
    - Confirm network ACLs allow traffic
+
+
+
+   ------------------
+
+   ## Database Connection Monitoring
+   
+   The project includes several scripts to help monitor and optimize database connections, especially useful when working with AWS RDS free tier (60 connection limit).
+   
+   ### Available Monitoring Scripts
+   
+   #### 1. Quick Connection Check
+   **Script:** `./scripts/check-connections.sh`
+   
+   Provides a quick overview of current database connection status:
+   ```bash
+   ./scripts/check-connections.sh
+   ```
+   
+   **What it shows:**
+   - Current active connections
+   - Connection usage percentage
+   - Connection limits
+   - Current Hikari pool settings
+   - Expected total connections
+   
+   #### 2. Comprehensive Database Monitor
+   **Script:** `./scripts/monitor-db-connections.sh`
+   
+   Full monitoring with service health checks and detailed connection analysis:
+   ```bash
+   # Basic monitoring
+   ./scripts/monitor-db-connections.sh
+   
+   # With active database processes
+   ./scripts/monitor-db-connections.sh --processes
+   ```
+   
+   **What it shows:**
+   - Service health status for all microservices
+   - Current database connections and usage
+   - Connection pool details for each service
+   - Active database processes (with `--processes` flag)
+   - Tips for optimization
+   
+   #### 3. Connection Pool Details
+   **Script:** `./scripts/check-connection-pools.sh`
+   
+   Detailed analysis of connection pool configuration and health:
+   ```bash
+   ./scripts/check-connection-pools.sh
+   ```
+   
+   **What it shows:**
+   - Current connection pool configuration
+   - Estimated total connections
+   - Service-specific connection pool health
+   - Works with both direct services and Docker containers
+   
+   ### When to Use Each Script
+   
+   | Script | Use Case | Frequency |
+   |--------|----------|-----------|
+   | `check-connections.sh` | Quick status check | Daily/As needed |
+   | `monitor-db-connections.sh` | Full system health | Weekly/During issues |
+   | `check-connection-pools.sh` | Detailed pool analysis | When optimizing |
+   
+   ### Connection Pool Optimization
+   
+   The scripts help ensure you stay within AWS RDS free tier limits:
+   
+   - **Target**: Keep connections under 50 (out of 60 max)
+   - **Current Settings**: 2 max connections per service
+   - **Estimated Total**: ~17 connections (well within limits)
+
+
+
+
+### Troubleshooting
+
+If you see high connection counts:
+1. Check if all services are using optimized settings
+2. Restart services to reset connection pools
+3. Monitor with `--processes` flag to identify active queries
+4. Consider reducing `DB_HIKARI_MAX_POOL_SIZE` in `.env` files

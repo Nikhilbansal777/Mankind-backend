@@ -81,131 +81,172 @@ You can choose your preferred method based on your needs. Docker is recommended 
 ### Run Service
 
 1. **Configure Environment**
-   - Copy `.env.example` on the folder root
-   - Paste that file in each microservice directory
+   - Copy `.env.example` on the root folder
+   - Paste that file on the same root folder
    - Rename the file to `.env`
-   - Update the database connection details in each `.env` file
+   - Update the database connection details on the `.env` file if needed
    - For detailed database configuration, see [Database Setup](#database-setup) section
 
-2. **Keycloak Setup (Required for Authentication)**
-   #### Setup - Run the command
+2. **Keycloak Setup (Just run once - skip if you had run it before)**
+   - This command is only run once to setup the Keycloak server.
+   - If you are using Windows, run it using Bash terminal.
+   - If you had run it before, you can skip this step.
+   - To check if Keycloak is already installed, you can check if the `keycloak-26.0.5` folder exists in the root folder.
+   - If you need to run it you can run the command:
+
       ```bash
       ./scripts/setup-keycloak.sh
       ```
    > **Note:** If for any reason you need to reset realm, there is a script to make it, just run the command : ./scripts/reset-mankind-realm.sh, but only in extreme need.
 
 3. **Build the Services**
+- To build the services, you can use the provided chose between two options:
 
     **Option 1: Use the provided script (easiest method)**
    ```bash
    mvn clean install
     ```
    
+   **Option 2: Manual build (build services individually)**
    <details>
-      <summary><b>Option 2: Manual build (build services individually)</b></summary>
+      <summary><b>Build each service in separate terminals</b></summary>
       
-      ```bash
-      cd user-service
-      ./mvnw clean install
-      ```
-      or 
+  **User Service:**
+  ```bash
+   cd user-service
+  source ../.env && ./mvnw clean install
+  ```
+  **Product Service:**
+   ```bash
+   cd product-service
+   source ../.env && ./mvnw clean install
+   ```
 
-      ```bash
-      cd product-service
-      ./mvnw clean install
-      ```
-      Build Gateway
-      ```bash
-      cd mankind-gateway-service
-      mvn clean install
-      ```
-      > **Note:** The gateway service uses `mvn clean install` because it does not have a Maven Wrapper (`mvnw`). The other services use `mvn clean install` for consistency and portability.
+  **Cart Service:**
+   ```bash
+   cd cart-service
+   source ../.env && ./mvnw clean install
+   ```
+
+  **Wishlist Service:**
+   ```bash
+   cd wishlist-service
+   source ../.env && ./mvnw clean install
+   ```
+
+  **Payment Service:**
+   ```bash
+   cd payment-service
+   source ../.env && ./mvnw clean install
+   ```
+
+  **Notification Service:**
+   ```bash
+   cd notification-service
+   source ../.env && ./mvnw clean install
+   ```
+      
+  **Coupon Service:**
+   ```bash
+   cd coupon-service
+   source ../.env && ./mvnw clean install
+   ```
+      
+  **Order Service:**
+   ```bash
+   cd order-service
+   source ../.env && ./mvnw clean install
+   ```
+      
+  **Gateway Service:**
+   ```bash
+   cd mankind-gateway-service
+   source ../.env && mvn clean install
+   ```
+  > **Note:** The gateway service uses `mvn clean install` because it does not have a Maven Wrapper (`mvnw`). The other services use `mvn clean install` for consistency and portability.
     </details>
 
 4. **Run the Services**
 
-   **Option 1: Use the provided script (easiest method)**
+- To run the services, you can use the provided chose between two options:
+
+    **Option 1: Use the provided script (easiest method)**
    ```bash
    ./scripts/run-all-services.sh
    ```
+   **Option 2: Manual startup (run services individually)**
+   
    <details>
-   <summary><b>Option 2: Manual startup (run services individually)</b></summary>
+   <summary><b>Build each service in separate terminals</b></summary>
 
-      **Start Keycloak (Required First)**
-      ```bash
-      cd keycloak-26.0.5
-      ./bin/kc.sh start-dev
-      ```
-
-      Start each service in separate terminals:
-      
-      **User Service (Port 8081):**
-      ```bash
-      cd user-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Product Service (Port 8080):**
-      ```bash
-      cd product-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Cart Service (Port 8082):**
-      ```bash
-      cd cart-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Wishlist Service (Port 8083):**
-      ```bash
-      cd wishlist-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Payment Service (Port 8084):**
-      ```bash
-      cd payment-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Notification Service (Port 8086):**
-      ```bash
-      cd notification-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Coupon Service (Port 8087):**
-      ```bash
-      cd coupon-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Order Service (Port 8088):**
-      ```bash
-      cd order-service
-      ./mvnw spring-boot:run
-      ```
-      
-      **Gateway Service (Port 8085):**
-      ```bash
-      cd mankind-gateway-service
-      mvn spring-boot:run
-      ```
-      > **Note:** The gateway service uses `mvn spring-boot:run` because it does not have a Maven Wrapper (`mvnw`). The other services use `./mvnw spring-boot:run` for consistency and portability.
+   **Start Keycloak (Required First)**
+   ```bash
+   cd keycloak-26.0.5
+   ./bin/kc.sh start-dev
+   ```
+   **User Service (Port 8081):**
+   ```bash
+   cd user-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Product Service (Port 8080):**
+   ```bash
+   cd product-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Cart Service (Port 8082):**
+   ```bash
+   cd cart-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Wishlist Service (Port 8083):**
+   ```bash
+   cd wishlist-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Payment Service (Port 8084):**
+   ```bash
+   cd payment-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Notification Service (Port 8086):**
+   ```bash
+   cd notification-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Coupon Service (Port 8087):**
+   ```bash
+   cd coupon-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Order Service (Port 8088):**
+   ```bash
+   cd order-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
+   
+   **Gateway Service (Port 8085):**
+   ```bash
+   cd mankind-gateway-service
+   set -a && source ../.env && set +a && mvn spring-boot:run
+   ```
    </details>
    
    **To stop all services:**
    ```bash
    ./scripts/stop-all-services.sh
    ```
-
-### Service Swagger documentation links:
-- Gateway: [http://localhost:8085](http://localhost:8085)
-
-### Services documentation
-
-Each service has its detailed documentation. Click on the service name to view its specific README:
+5. **Check if services are running**
+- Acess the Gateway Link on [http://localhost:8085](http://localhost:8085), it is supposed to show all the services
+- If you click on the Swagger documentation link, you are able to see each documentation.
+- Each service has its detailed documentation. Click on the service name to view its specific README:
 
 #### Available Services
 - [`user-service/`](user-service/README.md)
@@ -271,10 +312,10 @@ Each service has its detailed documentation. Click on the service name to view i
    docker info
    ```
 2. **Configure Environment**
-   - Copy `.env.example` to the folder root
-   - Paste that file in each microservice directory
+   - Copy `.env.example` on the root folder
+   - Paste that file on the same root folder
    - Rename the file to `.env`
-   - Update the database connection details in each `.env` file
+   - Update the database connection details on the `.env` file if needed
    - For detailed database configuration, see [Database Setup](#database-setup) section
 
 3. **Run All Services**
@@ -283,13 +324,13 @@ Each service has its detailed documentation. Click on the service name to view i
    docker-compose up --build
    ```
 
-   - Build and start a specific service (product-service for example)
+   - Build and start a specific service if needed (Optional)
    ```bash
    docker-compose up --build product-service
    ```
 
 4. **Manage Docker Services**
-   - Check running containers
+   - Check running containers and their status
    ```bash
    docker-compose ps
    ```
@@ -309,13 +350,10 @@ Each service has its detailed documentation. Click on the service name to view i
    docker-compose down
    ```
 
-### Service Swagger documentation links:
-- Gateway: [http://localhost:8085](http://localhost:8085)
-
-
-### Services documentation
-
-Each service has its detailed documentation. Click on the service name to view its specific README:
+5. **Check if services are running**
+- Acess the Gateway Link on [http://localhost:8085](http://localhost:8085), it is supposed to show all the services
+- If you click on the Swagger documentation link, you are able to see each documentation.
+- Each service has its detailed documentation. Click on the service name to view its specific README:
 
 #### Available Services
 - [`user-service/`](user-service/README.md)
@@ -328,7 +366,7 @@ Each service has its detailed documentation. Click on the service name to view i
 
 ------------------
 
-## Deployment
+## Deployment (Optional)
 
 The Mankind Matrix AI Backend can be deployed on different cloud platforms. Choose the platform that best suits your needs:
 
@@ -374,83 +412,3 @@ mankind-backend/
 ## Contributing
 
 Create a branch for the feature you are working on. When you are done, create a Pull request and share it for review before merging.
-
-------------------
-
-## Database Connection Monitoring
-
-The project includes several scripts to help monitor and optimize database connections, especially useful when working with AWS RDS free tier (60 connection limit).
-
-### Available Monitoring Scripts
-
-#### 1. Quick Connection Check
-**Script:** `./scripts/check-connections.sh`
-
-Provides a quick overview of current database connection status:
-```bash
-./scripts/check-connections.sh
-```
-
-**What it shows:**
-- Current active connections
-- Connection usage percentage
-- Connection limits
-- Current Hikari pool settings
-- Expected total connections
-
-#### 2. Comprehensive Database Monitor
-**Script:** `./scripts/monitor-db-connections.sh`
-
-Full monitoring with service health checks and detailed connection analysis:
-```bash
-# Basic monitoring
-./scripts/monitor-db-connections.sh
-
-# With active database processes
-./scripts/monitor-db-connections.sh --processes
-```
-
-**What it shows:**
-- Service health status for all microservices
-- Current database connections and usage
-- Connection pool details for each service
-- Active database processes (with `--processes` flag)
-- Tips for optimization
-
-#### 3. Connection Pool Details
-**Script:** `./scripts/check-connection-pools.sh`
-
-Detailed analysis of connection pool configuration and health:
-```bash
-./scripts/check-connection-pools.sh
-```
-
-**What it shows:**
-- Current connection pool configuration
-- Estimated total connections
-- Service-specific connection pool health
-- Works with both direct services and Docker containers
-
-### When to Use Each Script
-
-| Script | Use Case | Frequency |
-|--------|----------|-----------|
-| `check-connections.sh` | Quick status check | Daily/As needed |
-| `monitor-db-connections.sh` | Full system health | Weekly/During issues |
-| `check-connection-pools.sh` | Detailed pool analysis | When optimizing |
-
-### Connection Pool Optimization
-
-The scripts help ensure you stay within AWS RDS free tier limits:
-
-- **Target**: Keep connections under 50 (out of 60 max)
-- **Current Settings**: 2 max connections per service
-- **Estimated Total**: ~17 connections (well within limits)
-
-### Troubleshooting
-
-If you see high connection counts:
-1. Check if all services are using optimized settings
-2. Restart services to reset connection pools
-3. Monitor with `--processes` flag to identify active queries
-4. Consider reducing `DB_HIKARI_MAX_POOL_SIZE` in `.env` files

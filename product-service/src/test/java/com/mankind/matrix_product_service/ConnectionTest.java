@@ -10,8 +10,10 @@ public class ConnectionTest {
     
     @Test
     public void testDatabaseConnection() {
-        // Load environment variables from .env file
-        Dotenv dotenv = Dotenv.load();
+        // Load environment variables from .env file in parent directory
+        Dotenv dotenv = Dotenv.configure()
+            .directory("../")
+            .load();
 
         // Get database connection details from environment variables
         String url = String.format("jdbc:mysql://%s:%s/%s?connectTimeout=%s&socketTimeout=%s&useSSL=%s&allowPublicKeyRetrieval=%s&serverTimezone=%s&autoReconnect=%s&failOverReadOnly=%s",
