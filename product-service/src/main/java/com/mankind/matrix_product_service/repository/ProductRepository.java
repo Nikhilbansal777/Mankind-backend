@@ -22,5 +22,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     long countBySuppliers_Id(Long supplierId);
     long countBySuppliers_IdAndIsActiveTrue(Long supplierId);
     long countBySuppliers_IdAndIsActiveFalse(Long supplierId);
+
+    // Products by supplier
+    Page<Product> findBySuppliers_IdAndIsActiveTrue(Long supplierId, Pageable pageable);
 }
 
