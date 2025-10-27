@@ -37,6 +37,8 @@ services:
     container_name: mankind-gateway-service
     ports:
       - "8085:8085"
+    env_file:
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -91,7 +93,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - product-service/.env
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -143,7 +145,7 @@ services:
     ports:
       - "8081:8080"
     env_file:
-      - user-service/.env
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -194,7 +196,7 @@ services:
     ports:
       - "8082:8080"
     env_file:
-      - cart-service/.env
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -249,7 +251,7 @@ services:
     ports:
       - "8083:8080"
     env_file:
-      - wishlist-service/.env
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -301,7 +303,7 @@ services:
     ports:
       - "8084:8080"
     env_file:
-      - payment-service/.env
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -351,6 +353,8 @@ services:
     container_name: mankind-notification-service
     ports:
       - "8086:8080"
+    env_file:
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -403,7 +407,7 @@ services:
     ports:
       - "8087:8080"
     env_file:
-      - coupon-service/.env
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
@@ -456,7 +460,7 @@ services:
     ports:
       - "8088:8080"
     env_file:
-      - order-service/.env
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
