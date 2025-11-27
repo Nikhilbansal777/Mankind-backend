@@ -3,6 +3,7 @@ package com.mankind.mankindmatrixuserservice.controller;
 import com.mankind.api.user.dto.AuthRequest;
 import com.mankind.api.user.dto.AuthResponse;
 import com.mankind.api.user.dto.LogoutRequest;
+import com.mankind.api.user.dto.ResetPasswordRequest;
 import com.mankind.api.user.dto.UserDTO;
 import com.mankind.api.user.dto.UserRegistrationDTO;
 import com.mankind.mankindmatrixuserservice.service.UserService;
@@ -242,6 +243,76 @@ public class AuthController {
             .map(ResponseEntity::ok);
     }
 
+    @Operation(
+            summary = "Reset user password",
+            description = """
+            Resets a user's password directly in Keycloak.
+            
+            ## Process:
+            1. Validates the provided password meets security requirements
+            2. Looks up the user by username in the local database
+            3. Updates the password in Keycloak
+            
+            ## Requirements:
+            - Username must exist in the system
+            - Password must meet the password policy (uppercase, lowercase, digit, special character)
+            - Optional temporary flag will force the user to change password on next login
+            
+            ## Security:
+            - Intended for password reset flows where the user has proven their identity (e.g. OTP/email verification)
+            - Consider additional checks (token validation) in calling services or future iterations
+            """
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Password reset successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request payload",
+                    content = @Content(
+                            examples = {
+                                    @ExampleObject(
+                                            name = "Invalid Request",
+                                            value = """
+                            {
+                                "timestamp": "2024-01-15T10:30:00",
+                                "status": 400,
+                                "error": "Bad Request",
+                                "message": "Username is required"
+                            }
+                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            examples = {
+                                    @ExampleObject(
+                                            name = "User Not Found",
+                                            value = """
+                            {
+                                "timestamp": "2024-01-15T10:30:00",
+                                "status": 404,
+                                "error": "Not Found",
+                                "message": "User with username unknown.user not found"
+                            }
+                            """
+                                    )
+                            }
+                    )
+            )
+    })
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(
+            @Parameter(description = "Reset password request") @RequestBody ResetPasswordRequest request) {
+        userService.resetPassword(request);
+        return ResponseEntity.noContent().build();
+    }
     @Operation(
         summary = "Logout user", 
         description = """

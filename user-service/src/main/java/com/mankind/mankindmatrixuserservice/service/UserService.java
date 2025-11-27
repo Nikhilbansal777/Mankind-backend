@@ -2,6 +2,7 @@ package com.mankind.mankindmatrixuserservice.service;
 
 import com.mankind.api.user.dto.AuthRequest;
 import com.mankind.api.user.dto.AuthResponse;
+import com.mankind.api.user.dto.ResetPasswordRequest;
 import com.mankind.api.user.dto.UpdateUserDTO;
 import com.mankind.api.user.dto.UserDTO;
 import com.mankind.api.user.dto.UserRegistrationDTO;
@@ -100,6 +101,22 @@ public class UserService {
      */
     public Mono<Void> logout(String refreshToken) {
         return tokenService.revokeRefreshToken(refreshToken);
+    }
+
+    /**
+     * Reset a user's password in Keycloak.
+     *
+     * @param request reset password request containing username, new password, and optional temporary flag
+     */
+    public void resetPassword(ResetPasswordRequest request) {
+        if (request.getUsername() == null || request.getUsername().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username is required");
+        }
+        passwordValidationService.validatePassword(request.getNewPassword());
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User with username " + request.getUsername() + " not found"));
+        boolean temporary = request.getTemporary() != null && request.getTemporary();
+        kcAdmin.resetPassword(user.getKeycloakId(), request.getNewPassword(), temporary);
     }
 
     public UserDTO getUserById(Long id) {
