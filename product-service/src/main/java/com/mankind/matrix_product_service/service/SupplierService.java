@@ -1,9 +1,11 @@
 package com.mankind.matrix_product_service.service;
 
+import com.mankind.api.product.dto.product.ProductResponseDTO;
 import com.mankind.api.product.dto.supplier.SupplierDTO;
 import com.mankind.api.product.dto.supplier.SupplierResponseDTO;
 import com.mankind.api.product.dto.supplier.SupplierDashboardDTO;
 import com.mankind.matrix_product_service.exception.ResourceNotFoundException;
+import com.mankind.matrix_product_service.mapper.ProductMapper;
 import com.mankind.matrix_product_service.mapper.SupplierMapper;
 import com.mankind.matrix_product_service.model.Supplier;
 import com.mankind.matrix_product_service.repository.SupplierRepository;
@@ -24,6 +26,7 @@ public class SupplierService {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     @Transactional
     public SupplierResponseDTO createSupplier(SupplierDTO supplierDTO) {
@@ -50,6 +53,15 @@ public class SupplierService {
         return supplierRepository.findByIdAndIsActiveTrue(id)
                 .map(supplierMapper::toResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Supplier not found with ID: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDTO> getSupplierProducts(Long id, Pageable pageable) {
+        // Ensure supplier exists and is active
+        supplierRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier not found with ID: " + id));
+        return productRepository.findBySuppliers_IdAndIsActiveTrue(id, pageable)
+                .map(productMapper::toResponseDTO);
     }
 
     @Transactional

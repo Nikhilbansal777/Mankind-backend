@@ -54,3 +54,7 @@ Accept: application/json
 ### Delete supplier (soft delete)
 DELETE {{baseUrl}}/api/v1/suppliers/{{id}}
 Accept: application/json
+
+### Get products supplied by supplier (paginated)
+GET {{baseUrl}}/api/v1/suppliers/{{id}}/products?page=0&size=10
+Accept: application/json
