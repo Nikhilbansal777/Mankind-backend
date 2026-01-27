@@ -54,3 +54,18 @@ Accept: application/json
 ### Delete supplier (soft delete)
 DELETE {{baseUrl}}/api/v1/suppliers/{{id}}
 Accept: application/json
+
+### Get all registered suppliers with new fields
+GET {{baseUrl}}/api/v1/suppliers?page=0&size=10
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get supplier details including business metrics
+GET {{baseUrl}}/api/v1/suppliers/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get supplier by ID (with business metrics)
+GET {{baseUrl}}/api/v1/suppliers/2
+Accept: application/json
+Authorization: Bearer {{token}}

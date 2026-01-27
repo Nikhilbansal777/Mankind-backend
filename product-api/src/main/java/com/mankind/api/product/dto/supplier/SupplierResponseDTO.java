@@ -45,6 +45,15 @@ public class SupplierResponseDTO {
     @Schema(description = "Whether the supplier is active", example = "true")
     private boolean isActive;
 
+    @Schema(description = "Date when the supplier joined", example = "2023-01-15T10:30:00")
+    private LocalDateTime dateOfJoined;
+
+    @Schema(description = "Total business amount done till date", example = "150000.50")
+    private java.math.BigDecimal businessDoneTillDate;
+
+    @Schema(description = "Number of items supplied", example = "450")
+    private Integer itemsSupplied;
+
     @Schema(description = "List of product IDs supplied by this supplier")
     private List<Long> productIds;
 

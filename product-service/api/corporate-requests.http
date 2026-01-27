@@ -1,0 +1,65 @@
+### Variables
+@baseUrl = http://localhost:8080
+@id = 1
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW1wbGVVc2VyIiwiaWF0IjoxNzUwMDQzMjE3LCJleHAiOjE3NTAxMjk2MTd9.9boM4n6QUf7ZimVLRQjjqTEC3xQ3V6YyBR4EtqXHB6Y
+
+### Corporate Account Management ###
+
+### Get all corporate accounts (paginated)
+GET {{baseUrl}}/api/v1/corporate?page=0&size=10
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get corporate account by ID
+GET {{baseUrl}}/api/v1/corporate/{{id}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Create new corporate account
+POST {{baseUrl}}/api/v1/corporate
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "New Enterprise Corp",
+  "purchases": 55000.00,
+  "numberOfOrdersPlaced": 30
+}
+
+### Update corporate account
+PUT {{baseUrl}}/api/v1/corporate/{{id}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Updated Enterprise Corp",
+  "purchases": 65000.00,
+  "numberOfOrdersPlaced": 35
+}
+
+### Delete corporate account (soft delete)
+DELETE {{baseUrl}}/api/v1/corporate/{{id}}
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get all registered corporate accounts
+GET {{baseUrl}}/api/v1/corporate?page=0&size=20
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get corporate account 1 details
+GET {{baseUrl}}/api/v1/corporate/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get corporate account 3 details with all information
+GET {{baseUrl}}/api/v1/corporate/3
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### Get all corporate accounts with advanced pagination
+GET {{baseUrl}}/api/v1/corporate?page=0&size=5&sort=dateOfJoined,desc
+Accept: application/json
+Authorization: Bearer {{token}}

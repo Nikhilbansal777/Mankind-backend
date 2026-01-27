@@ -54,6 +54,15 @@ public class Supplier {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
+    @Column(name = "date_of_joined")
+    private LocalDateTime dateOfJoined;
+
+    @Column(name = "business_done_till_date", precision = 15, scale = 2)
+    private java.math.BigDecimal businessDoneTillDate;
+
+    @Column(name = "items_supplied", nullable = false)
+    private Integer itemsSupplied = 0;
+
     @ManyToMany(mappedBy = "suppliers")
     private Set<Product> products = new HashSet<>();
 
