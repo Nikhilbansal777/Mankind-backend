@@ -1,5 +1,6 @@
 package com.mankind.matrix_product_service.controller;
 
+import com.mankind.api.product.dto.product.ProductResponseDTO;
 import com.mankind.api.product.dto.supplier.SupplierDTO;
 import com.mankind.api.product.dto.supplier.SupplierResponseDTO;
 import com.mankind.api.product.dto.supplier.SupplierDashboardDTO;
@@ -70,6 +71,22 @@ public class SupplierController {
             @Parameter(description = "ID of the supplier to retrieve", required = true)
             @PathVariable Long id) {
         return ResponseEntity.ok(supplierService.getSupplierById(id));
+    }
+
+    @Operation(summary = "Get products supplied by supplier", description = "Retrieves a paginated list of active products supplied by the given supplier")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved products",
+                content = @Content(schema = @Schema(implementation = ProductResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Supplier not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/{id}/products")
+    public ResponseEntity<Page<ProductResponseDTO>> getSupplierProducts(
+            @Parameter(description = "ID of the supplier", required = true)
+            @PathVariable Long id,
+            @Parameter(description = "Pagination and sorting parameters")
+            Pageable pageable) {
+        return ResponseEntity.ok(supplierService.getSupplierProducts(id, pageable));
     }
 
     @Operation(summary = "Update supplier", description = "Updates an existing supplier")

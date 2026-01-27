@@ -42,6 +42,15 @@ public class Inventory {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal price;
 
+    @Column(name = "corporate_price", precision = 10, scale = 2)
+    private BigDecimal corporatePrice;
+
+    @Column(name = "updated_by_corporate")
+    private String updatedByCorporate;
+
+    @Column(name = "last_updated_at_corporate")
+    private LocalDateTime lastUpdatedAtCorporate;
+
     @Column(length = 3, nullable = false)
     private String currency;
 

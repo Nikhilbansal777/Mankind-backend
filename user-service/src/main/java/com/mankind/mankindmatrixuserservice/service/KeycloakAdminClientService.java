@@ -101,4 +101,22 @@ public class KeycloakAdminClientService {
             log.debug("Updated Keycloak user '{}' profile fields", keycloakId);
         }
     }
+
+    /**
+     * Reset a user's password in Keycloak.
+     *
+     * @param keycloakId the Keycloak user id
+     * @param newPassword the new password
+     * @param temporary whether the password should be marked as temporary
+     */
+    public void resetPassword(String keycloakId, String newPassword, boolean temporary) {
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setType(CredentialRepresentation.PASSWORD);
+        credential.setValue(newPassword);
+        credential.setTemporary(temporary);
+        keycloak.realm(realm).users()
+                .get(keycloakId)
+                .resetPassword(credential);
+        log.debug("Reset password for Keycloak user '{}'", keycloakId);
+    }
 }

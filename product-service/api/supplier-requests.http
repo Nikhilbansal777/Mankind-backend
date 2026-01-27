@@ -69,3 +69,6 @@ Authorization: Bearer {{token}}
 GET {{baseUrl}}/api/v1/suppliers/2
 Accept: application/json
 Authorization: Bearer {{token}}
+### Get products supplied by supplier (paginated)
+GET {{baseUrl}}/api/v1/suppliers/{{id}}/products?page=0&size=10
+Accept: application/json

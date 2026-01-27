@@ -1,9 +1,12 @@
 package com.mankind.matrix_product_service.service;
 
 
+import com.mankind.api.product.dto.inventory.CorporatePricingDTO;
+import com.mankind.api.product.dto.inventory.CorporatePricingResponseDTO;
 import com.mankind.api.product.dto.inventory.InventoryDTO;
 import com.mankind.api.product.dto.inventory.InventoryLogDTO;
 import com.mankind.api.product.dto.inventory.InventoryResponseDTO;
+import com.mankind.api.user.dto.UserDTO;
 import com.mankind.matrix_product_service.exception.ResourceNotFoundException;
 import com.mankind.matrix_product_service.mapper.InventoryLogMapper;
 import com.mankind.matrix_product_service.mapper.InventoryMapper;
@@ -34,7 +37,7 @@ public class InventoryService {
     public InventoryResponseDTO createInventory(Long productId, InventoryDTO inventoryDTO) {
         // Verify admin role for inventory creation
         roleVerificationService.verifyAdminOrSuperAdminRole();
-        
+
         if (!productRepository.existsById(productId)) {
             throw new ResourceNotFoundException("Product not found with id: " + productId);
         }
@@ -71,7 +74,7 @@ public class InventoryService {
     public InventoryResponseDTO updateInventory(Long productId, InventoryDTO inventoryDTO) {
         // Verify admin role for inventory updates
         roleVerificationService.verifyAdminOrSuperAdminRole();
-        
+
         Inventory inventory = inventoryRepository.findByProductId(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Inventory not found for product: " + productId));
 
@@ -354,5 +357,51 @@ public class InventoryService {
         inventoryLogRepository.save(log);
 
         return inventoryMapper.toResponseDTO(inventory);
+    }
+
+    /**
+     * Update corporate price for a product
+     * @param productId the ID of the product
+     * @param corporatePricingDTO the corporate pricing data
+     * @return the updated corporate pricing information
+     */
+    @Transactional
+    public CorporatePricingResponseDTO updateCorporatePrice(Long productId, CorporatePricingDTO corporatePricingDTO) {
+        // Verify corporate role for corporate pricing updates
+        UserDTO corporateUser = roleVerificationService.getCurrentCorporateUser();
+
+        Inventory inventory = inventoryRepository.findByProductId(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Inventory not found for product: " + productId));
+
+        // Log corporate price changes
+        if (inventory.getCorporatePrice() != null && 
+            !corporatePricingDTO.getCorporatePrice().equals(inventory.getCorporatePrice())) {
+            InventoryLog priceLog = InventoryLog.builder()
+                .inventory(inventory)
+                .actionType(InventoryActionType.PRICE_CHANGE)
+                .quantity(BigDecimal.ZERO)
+                .description(String.format("Corporate price updated from %s to %s", 
+                    formatPriceDisplay(inventory.getCorporatePrice(), inventory.getCurrency()),
+                    formatPriceDisplay(corporatePricingDTO.getCorporatePrice(), corporatePricingDTO.getCurrency())))
+                .createdBy(corporateUser.getUsername())
+                .build();
+            inventoryLogRepository.save(priceLog);
+        } else if (inventory.getCorporatePrice() == null) {
+            InventoryLog priceLog = InventoryLog.builder()
+                .inventory(inventory)
+                .actionType(InventoryActionType.PRICE_CHANGE)
+                .quantity(BigDecimal.ZERO)
+                .description(String.format("Corporate price set to %s", 
+                    formatPriceDisplay(corporatePricingDTO.getCorporatePrice(), corporatePricingDTO.getCurrency())))
+                .createdBy(corporateUser.getUsername())
+                .build();
+            inventoryLogRepository.save(priceLog);
+        }
+
+        // Update the inventory with corporate pricing information
+        inventoryMapper.updateCorporatePrice(inventory, corporatePricingDTO, corporateUser.getUsername());
+        inventory = inventoryRepository.save(inventory);
+
+        return inventoryMapper.toCorporatePricingResponseDTO(inventory);
     }
 } 
