@@ -1,0 +1,50 @@
+server:
+  port: 8086
+
+jwt:
+  secret: ${CORPORATE_JWT_SECRET:change-me-please-change-this-secret-32}
+  expires-in-seconds: ${CORPORATE_JWT_EXPIRES_IN_SECONDS:3600}
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?connectTimeout=${DB_CONNECT_TIMEOUT}&socketTimeout=${DB_SOCKET_TIMEOUT}&useSSL=${DB_USE_SSL}&allowPublicKeyRetrieval=${DB_ALLOW_PUBLIC_KEY_RETRIEVAL}&serverTimezone=${DB_SERVER_TIMEZONE}&autoReconnect=${DB_AUTO_RECONNECT}&failOverReadOnly=${DB_FAIL_OVER_READ_ONLY}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: ${DB_HIKARI_CONNECTION_TIMEOUT:20000}
+      maximum-pool-size: ${DB_HIKARI_MAX_POOL_SIZE:2}
+      minimum-idle: ${DB_HIKARI_MIN_IDLE:0}
+      idle-timeout: ${DB_HIKARI_IDLE_TIMEOUT:120000}
+      max-lifetime: ${DB_HIKARI_MAX_LIFETIME:300000}
+      leak-detection-threshold: ${DB_HIKARI_LEAK_DETECTION_THRESHOLD:30000}
+      connection-test-query: SELECT 1
+      validation-timeout: 5000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        format_sql: true
+  profiles:
+    active: dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
