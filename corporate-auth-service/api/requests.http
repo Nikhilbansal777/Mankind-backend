@@ -6,9 +6,9 @@ POST {{baseUrl}}/api/v1/corporate/auth/register
 Content-Type: application/json
 
 {
-  "corporateName": "Acme Corp",
-  "email": "corp.admin@acme.com",
-  "password": "SecurePassword123!",
+  "corporateName": "Mankind America LLC",
+  "email": "corp.admin@mankindamerica.com",
+  "password": "Admin@123",
   "dateOfJoining": "2024-01-15"
 }
 
@@ -20,7 +20,7 @@ Content-Type: application/json
 {
   "corporateName": "customer",
   "email": "customer@gmail.com",
-  "password": "SecurePassword123!",
+  "password": "Password123!",
   "dateOfJoining": "2024-01-15"
 }
 
@@ -30,9 +30,9 @@ POST {{baseUrl}}/api/v1/corporate/auth/login
 Content-Type: application/json
 
 {
-  "corporateName": "Acme Corp",
-  "email": "corp.admin@acme.com",
-  "password": "SecurePassword123!",
+  "corporateName": "Mankind America LLC",
+  "email": "corp.admin@mankindamerica.com",
+  "password": "Admin@123",
   "dateOfJoining": "2024-01-15"
 }
 

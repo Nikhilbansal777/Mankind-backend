@@ -45,4 +45,11 @@ public class CorporateUser {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public CorporateUser(String corporateName, String email, String passwordHash, LocalDate dateOfJoining) {
+        this.corporateName = corporateName;
+        this.email = email == null ? null : email.toLowerCase().trim();
+        this.passwordHash = passwordHash;
+        this.dateOfJoining = dateOfJoining;
+    }
 }

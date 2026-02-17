@@ -30,15 +30,18 @@ public class CorporateAuthService {
         if (request.getDateOfJoining().isAfter(LocalDate.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Date of joining cannot be in the future");
         }
-        if (corporateUserRepository.existsByEmail(request.getEmail())) {
+        String normalizedEmail = normalizeEmail(request.getEmail());
+
+        if (corporateUserRepository.existsByEmail(normalizedEmail)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
-        CorporateUser user = new CorporateUser();
-        user.setCorporateName(request.getCorporateName());
-        user.setEmail(request.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        user.setDateOfJoining(request.getDateOfJoining());
+        CorporateUser user = new CorporateUser(
+                request.getCorporateName(),
+                normalizedEmail,
+                passwordEncoder.encode(request.getPassword()),
+                request.getDateOfJoining()
+        );
 
         CorporateUser savedUser = corporateUserRepository.save(user);
 
@@ -53,15 +56,10 @@ public class CorporateAuthService {
     }
 
     public CorporateAuthResponse login(CorporateLoginRequest request) {
-        CorporateUser user = corporateUserRepository.findByEmail(request.getEmail())
+        String normalizedEmail = normalizeEmail(request.getEmail());
+        CorporateUser user = corporateUserRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
-        if (!user.getCorporateName().equals(request.getCorporateName())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
-        }
-        if (!user.getDateOfJoining().equals(request.getDateOfJoining())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
-        }
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
@@ -74,6 +72,10 @@ public class CorporateAuthService {
                 .expiresIn(jwtService.getExpiresInSeconds())
                 .user(toResponse(user))
                 .build();
+    }
+
+    private String normalizeEmail(String email) {
+        return email == null ? null : email.toLowerCase().trim();
     }
 
     private CorporateUserResponse toResponse(CorporateUser user) {

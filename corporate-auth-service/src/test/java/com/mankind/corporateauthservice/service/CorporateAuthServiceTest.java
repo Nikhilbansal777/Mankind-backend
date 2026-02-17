@@ -59,10 +59,8 @@ class CorporateAuthServiceTest {
         registrationRequest.setDateOfJoining(LocalDate.of(2024, 1, 15));
 
         loginRequest = new CorporateLoginRequest();
-        loginRequest.setCorporateName("Acme Corp");
         loginRequest.setEmail("admin@acme.com");
         loginRequest.setPassword("SecurePassword123!");
-        loginRequest.setDateOfJoining(LocalDate.of(2024, 1, 15));
 
         storedUser = new CorporateUser();
         storedUser.setId(1L);
@@ -95,6 +93,22 @@ class CorporateAuthServiceTest {
     }
 
     @Test
+    void registerNormalizesEmailBeforePersistence() {
+        registrationRequest.setEmail("  Admin@Acme.com ");
+        when(corporateUserRepository.existsByEmail(eq("admin@acme.com"))).thenReturn(false);
+        when(passwordEncoder.encode(eq(registrationRequest.getPassword()))).thenReturn("$encoded");
+        when(corporateUserRepository.save(any(CorporateUser.class))).thenReturn(storedUser);
+        when(jwtService.generateToken(eq(storedUser))).thenReturn("token");
+        when(jwtService.getExpiresInSeconds()).thenReturn(3600L);
+
+        corporateAuthService.register(registrationRequest);
+
+        verify(corporateUserRepository).save(userCaptor.capture());
+        CorporateUser savedUser = userCaptor.getValue();
+        assertThat(savedUser.getEmail()).isEqualTo("admin@acme.com");
+    }
+
+    @Test
     void registerCreatesUserAndReturnsToken() {
         when(corporateUserRepository.existsByEmail(eq(registrationRequest.getEmail()))).thenReturn(false);
         when(passwordEncoder.encode(eq(registrationRequest.getPassword()))).thenReturn("$encoded");
@@ -124,25 +138,17 @@ class CorporateAuthServiceTest {
     }
 
     @Test
-    void loginRejectsCorporateNameMismatch() {
-        when(corporateUserRepository.findByEmail(eq(loginRequest.getEmail()))).thenReturn(Optional.of(storedUser));
-        loginRequest.setCorporateName("Other Corp");
+    void loginNormalizesEmailBeforeLookup() {
+        loginRequest.setEmail("  ADMIN@ACME.COM ");
+        when(corporateUserRepository.findByEmail(eq("admin@acme.com"))).thenReturn(Optional.of(storedUser));
+        when(passwordEncoder.matches(eq(loginRequest.getPassword()), eq(storedUser.getPasswordHash()))).thenReturn(true);
+        when(jwtService.generateToken(eq(storedUser))).thenReturn("token");
+        when(jwtService.getExpiresInSeconds()).thenReturn(3600L);
 
-        assertThatThrownBy(() -> corporateAuthService.login(loginRequest))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(ex -> assertThat(((ResponseStatusException) ex).getStatusCode())
-                        .isEqualTo(HttpStatus.UNAUTHORIZED));
-    }
+        CorporateAuthResponse response = corporateAuthService.login(loginRequest);
 
-    @Test
-    void loginRejectsDateMismatch() {
-        when(corporateUserRepository.findByEmail(eq(loginRequest.getEmail()))).thenReturn(Optional.of(storedUser));
-        loginRequest.setDateOfJoining(LocalDate.of(2024, 1, 16));
-
-        assertThatThrownBy(() -> corporateAuthService.login(loginRequest))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(ex -> assertThat(((ResponseStatusException) ex).getStatusCode())
-                        .isEqualTo(HttpStatus.UNAUTHORIZED));
+        assertThat(response.getAccessToken()).isEqualTo("token");
+        verify(corporateUserRepository).findByEmail("admin@acme.com");
     }
 
     @Test

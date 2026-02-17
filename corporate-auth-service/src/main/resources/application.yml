@@ -2,12 +2,12 @@ server:
   port: 8086
 
 jwt:
-  secret: ${CORPORATE_JWT_SECRET:change-me-please-change-this-secret-32}
+  secret: ${CORPORATE_JWT_SECRET}
   expires-in-seconds: ${CORPORATE_JWT_EXPIRES_IN_SECONDS:3600}
 
 spring:
   config:
-    import: optional:file:.env[.properties]
+    import: optional:file:.env[.properties],optional:file:./corporate-auth-service/.env[.properties]
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?connectTimeout=${DB_CONNECT_TIMEOUT}&socketTimeout=${DB_SOCKET_TIMEOUT}&useSSL=${DB_USE_SSL}&allowPublicKeyRetrieval=${DB_ALLOW_PUBLIC_KEY_RETRIEVAL}&serverTimezone=${DB_SERVER_TIMEZONE}&autoReconnect=${DB_AUTO_RECONNECT}&failOverReadOnly=${DB_FAIL_OVER_READ_ONLY}
     username: ${DB_USERNAME}
