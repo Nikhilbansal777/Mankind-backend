@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:8086
+
+### Corporate Registration
+# @name register
+POST {{baseUrl}}/api/v1/corporate/auth/register
+Content-Type: application/json
+
+{
+  "corporateName": "Mankind America LLC",
+  "email": "corp.admin@mankindamerica.com",
+  "password": "Admin@123",
+  "dateOfJoining": "2024-01-15"
+}
+
+### Customer Registration
+# @name register
+POST {{baseUrl}}/api/v1/corporate/auth/register
+Content-Type: application/json
+
+{
+  "corporateName": "customer",
+  "email": "customer@gmail.com",
+  "password": "Password123!",
+  "dateOfJoining": "2024-01-15"
+}
+
+### Corporate Login
+# @name login
+POST {{baseUrl}}/api/v1/corporate/auth/login
+Content-Type: application/json
+
+{
+  "corporateName": "Mankind America LLC",
+  "email": "corp.admin@mankindamerica.com",
+  "password": "Admin@123",
+  "dateOfJoining": "2024-01-15"
+}
+
+### Corporate Profile (requires Bearer token)
+@token = {{login.response.body.accessToken}}
+GET {{baseUrl}}/api/v1/corporate/profile
+Authorization: Bearer {{token}}
