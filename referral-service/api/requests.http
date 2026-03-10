@@ -1,0 +1,48 @@
+@base_url=http://localhost:8089
+@gateway_url=http://localhost:8085/api/v1
+@user_service_url=http://localhost:8081
+@token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJZTThnMHM4QWRVWG5XZ2ptOEl1V2s0MDBtaVlURE8xRkRNVTJFM0psQ0ZFIn0.eyJleHAiOjE3NzI1OTU3MDAsImlhdCI6MTc3MjU5NTQwMCwianRpIjoiYjlkMzY4NDUtNTQ4Ni00YTEyLTg4MjYtNGE4ZDc5OTg2NzBhIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9tYW5raW5kIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6Ijg0ODEwYjkzLWZhYWItNGI2Mi05ODVhLWIxMTIxMjRiZjY5MiIsInR5cCI6IkJlYXJlciIsImF6cCI6InVzZXItc2VydmljZSIsInNpZCI6IjgyMzk3N2Q4LTgwYmMtNDdjMS1iOGIyLTllNjRkZjZjOWE4MiIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiLyoiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJkZWZhdWx0LXJvbGVzLW1hbmtpbmQiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6IlJlZmVycmFsIFVzZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJyZWZlcnJhbC51c2VyLjAxIiwiZ2l2ZW5fbmFtZSI6IlJlZmVycmFsIiwiZmFtaWx5X25hbWUiOiJVc2VyIiwiZW1haWwiOiJyZWZlcnJhbC51c2VyLjAxQGV4YW1wbGUuY29tIn0.PHSQ6EFMtd7edxOhfa-GfU-noW8GR2VskHsEPiR0R0UqILyAV-HEKjFPWsY7aJiY3rhpcXRmZ5SWpYXc2ebTgvl_CEh61_kutitu1ZplWxzw4PeReQA957tXT-MQ6N5Q_fbG2CfW2v4B-uxrtYkG94T413bgVpWrGnQe5gNrF-uqaDHRlkK2UvNIKcXJ_KXDtgbzd-uPUT5R994kq0AKlesfFyRc71-XbfcZxuMbfckB3j-dfbYc6KeuGIxlDfPAC3zl1gsdFcqepIhxfG8qai2cgOkY3GjhVXs7YdMD_jtH0R-YDhYbk3DecGQDsw2U3HjIlIhEiYhZtg-qgdU32g
+
+### Register user (direct user-service)
+POST {{user_service_url}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "referral.user.01",
+  "email": "referral.user.01@example.com",
+  "firstName": "Referral",
+  "lastName": "User",
+  "password": "Secure@1234",
+  "role": "USER",
+  "active": true
+}
+
+### Login user (direct user-service) - copy access_token into @token
+POST {{user_service_url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "referral.user.01",
+  "password": "Secure@1234"
+}
+
+### Create referral code for current user (direct service)
+POST {{base_url}}/referrals/me/code
+Authorization: Bearer {{token}}
+
+### Get current user referral code (direct service)
+GET {{base_url}}/referrals/me/code
+Authorization: Bearer {{token}}
+
+### Validate referral code (direct service)
+GET {{base_url}}/referrals/validate?code=REF69AC02OV
+
+### Create referral code via gateway
+POST {{gateway_url}}/referrals/me/code
+Authorization: Bearer {{token}}
+
+### Get referral code via gateway
+GET {{gateway_url}}/referrals/me/code
+Authorization: Bearer {{token}}

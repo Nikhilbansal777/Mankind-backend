@@ -1,13 +1,7 @@
 server:
-  port: 8090
-
-jwt:
-  secret: ${CORPORATE_JWT_SECRET}
-  expires-in-seconds: ${CORPORATE_JWT_EXPIRES_IN_SECONDS:3600}
+  port: 8080
 
 spring:
-  config:
-    import: optional:file:.env[.properties],optional:file:./corporate-auth-service/.env[.properties]
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?connectTimeout=${DB_CONNECT_TIMEOUT}&socketTimeout=${DB_SOCKET_TIMEOUT}&useSSL=${DB_USE_SSL}&allowPublicKeyRetrieval=${DB_ALLOW_PUBLIC_KEY_RETRIEVAL}&serverTimezone=${DB_SERVER_TIMEZONE}&autoReconnect=${DB_AUTO_RECONNECT}&failOverReadOnly=${DB_FAIL_OVER_READ_ONLY}
     username: ${DB_USERNAME}
@@ -25,13 +19,24 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     properties:
       hibernate:
-        format_sql: true
-  profiles:
-    active: dev
+        connection:
+          provider_disables_autocommit: false
+        format_sql: false
+        current_session_context_class: thread
+        transaction:
+          auto_commit: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui
+  show-actuator: false
 
 management:
   endpoints:
