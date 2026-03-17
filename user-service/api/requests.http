@@ -1,6 +1,6 @@
 ##replace Token value after each login
 @token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYW1wbGVVc2VyIiwiaWF0IjoxNzUwMDQzMjE3LCJleHAiOjE3NTAxMjk2MTd9.9boM4n6QUf7ZimVLRQjjqTEC3xQ3V6YyBR4EtqXHB6Y
-@userId = 1
+@userId = 8
 ### Create User
 
 POST http://localhost:8081/api/v1/auth/register

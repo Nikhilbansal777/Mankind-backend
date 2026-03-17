@@ -110,6 +110,20 @@ spring:
           filters:
             - RewritePath=/api/v1/notifications/(?<segment>.*), /notifications/${segment}
 
+        - id: referrals-root
+          uri: ${REFERRAL_SERVICE_URL:http://localhost:8089}
+          predicates:
+            - Path=/api/v1/referrals
+          filters:
+            - SetPath=/referrals
+
+        - id: referrals
+          uri: ${REFERRAL_SERVICE_URL:http://localhost:8089}
+          predicates:
+            - Path=/api/v1/referrals/**
+          filters:
+            - RewritePath=/api/v1/referrals/(?<segment>.*), /referrals/${segment}
+
         # Order service routes - admin routes first (more specific)
         - id: admin-orders
           uri: ${ORDER_SERVICE_URL:http://localhost:8088}
