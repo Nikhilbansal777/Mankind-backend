@@ -13,6 +13,11 @@ services:
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
       KC_HTTPS_ENABLED: false
+      # Keep Keycloak lightweight for dev/test machines
+      JAVA_TOOL_OPTIONS: >-
+        -XX:InitialRAMPercentage=10
+        -XX:MaxRAMPercentage=60
+        -XX:ActiveProcessorCount=1
     ports:
       - "8180:8080"
     volumes:
@@ -39,7 +44,10 @@ services:
       - "8085:8085"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      # Smaller default JVM footprint for low-power machines
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - USER_SERVICE_URL=http://mankind-user-service:8080
       - PRODUCT_SERVICE_URL=http://mankind-product-service:8080
       - CART_SERVICE_URL=http://mankind-cart-service:8080
@@ -96,7 +104,9 @@ services:
       - product-service/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -148,7 +158,9 @@ services:
       - user-service/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -199,7 +211,9 @@ services:
       - cart-service/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -254,7 +268,9 @@ services:
       - wishlist-service/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -306,7 +322,9 @@ services:
       - payment-service/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -343,54 +361,6 @@ services:
     depends_on:
       - keycloak
 
-  # Corporate Auth Service
-  corporate-auth-service:
-    build:
-      context: .
-      dockerfile: corporate-auth-service/Dockerfile
-      args:
-        MAVEN_OPTS: "-Xmx512m -XX:MaxMetaspaceSize=256m"
-    container_name: mankind-corporate-auth-service
-    ports:
-      - "8088:8086"
-    env_file:
-      - corporate-auth-service/.env
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_NAME}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_CONNECT_TIMEOUT=${DB_CONNECT_TIMEOUT}
-      - DB_SOCKET_TIMEOUT=${DB_SOCKET_TIMEOUT}
-      - DB_USE_SSL=${DB_USE_SSL}
-      - DB_ALLOW_PUBLIC_KEY_RETRIEVAL=${DB_ALLOW_PUBLIC_KEY_RETRIEVAL}
-      - DB_SERVER_TIMEZONE=${DB_SERVER_TIMEZONE}
-      - DB_AUTO_RECONNECT=${DB_AUTO_RECONNECT}
-      - DB_FAIL_OVER_READ_ONLY=${DB_FAIL_OVER_READ_ONLY}
-      - DB_HIKARI_MAX_POOL_SIZE=${DB_HIKARI_MAX_POOL_SIZE}
-      - DB_HIKARI_MIN_IDLE=${DB_HIKARI_MIN_IDLE}
-      - DB_HIKARI_CONNECTION_TIMEOUT=${DB_HIKARI_CONNECTION_TIMEOUT}
-      - DB_HIKARI_IDLE_TIMEOUT=${DB_HIKARI_IDLE_TIMEOUT}
-      - DB_HIKARI_MAX_LIFETIME=${DB_HIKARI_MAX_LIFETIME}
-    deploy:
-      resources:
-        limits:
-          memory: 768M
-        reservations:
-          memory: 512M
-    networks:
-      - mankind-network
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8086/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-    restart: unless-stopped
-
   # Notification Service
   notification-service:
     build:
@@ -403,7 +373,9 @@ services:
       - "8086:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -456,7 +428,9 @@ services:
       - coupon-service/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -509,7 +483,9 @@ services:
       - order-service/.env
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
@@ -568,7 +544,9 @@ services:
       - "8089:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - JAVA_OPTS=-Xms256m -Xmx512m -XX:MaxMetaspaceSize=256m
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=192m -XX:ActiveProcessorCount=1
+      - SPRING_MAIN_LAZY_INITIALIZATION=true
+      - LOGGING_LEVEL_ROOT=warn
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
