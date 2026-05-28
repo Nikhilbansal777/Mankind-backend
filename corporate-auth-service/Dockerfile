@@ -15,9 +15,6 @@ WORKDIR /app
 # Copy the built jar from build stage
 COPY --from=build /build/corporate-auth-service/target/*.jar app.jar
 
-# Set environment variables
-ENV JAVA_OPTS="-Xms256m -Xmx512m"
-
 # Expose the application port
 EXPOSE 8086
 
