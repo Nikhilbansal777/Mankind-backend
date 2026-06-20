@@ -7,6 +7,7 @@ import com.mankind.api.product.dto.supplier.SupplierDashboardDTO;
 import com.mankind.matrix_product_service.exception.ResourceNotFoundException;
 import com.mankind.matrix_product_service.mapper.ProductMapper;
 import com.mankind.matrix_product_service.mapper.SupplierMapper;
+import com.mankind.matrix_product_service.model.Product;
 import com.mankind.matrix_product_service.model.Supplier;
 import com.mankind.matrix_product_service.repository.SupplierRepository;
 import com.mankind.matrix_product_service.repository.ProductRepository;
@@ -18,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -105,6 +109,8 @@ public class SupplierService {
         long active = productRepository.countBySuppliers_IdAndIsActiveTrue(id);
         long inactive = productRepository.countBySuppliers_IdAndIsActiveFalse(id);
 
+        Optional<Product> lastProduct = productRepository.findTopBySuppliers_IdOrderByCreatedAtDesc(id);
+
         return SupplierDashboardDTO.builder()
                 .supplierId(supplier.getId())
                 .supplierName(supplier.getName())
@@ -113,7 +119,35 @@ public class SupplierService {
                 .inactiveProducts(inactive)
                 .createdAt(supplier.getCreatedAt())
                 .updatedAt(supplier.getUpdatedAt())
+                .lastSuppliedItemName(lastProduct.map(Product::getName).orElse(null))
+                .lastSuppliedItemDate(lastProduct.map(Product::getCreatedAt).orElse(null))
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SupplierDashboardDTO> getAdminSummary() {
+        List<Supplier> suppliers = supplierRepository.findAll();
+        return suppliers.stream()
+                .filter(Supplier::isActive)
+                .map(supplier -> {
+                    Long id = supplier.getId();
+                    long total = productRepository.countBySuppliers_Id(id);
+                    long active = productRepository.countBySuppliers_IdAndIsActiveTrue(id);
+                    long inactive = productRepository.countBySuppliers_IdAndIsActiveFalse(id);
+                    Optional<Product> lastProduct = productRepository.findTopBySuppliers_IdOrderByCreatedAtDesc(id);
+                    return SupplierDashboardDTO.builder()
+                            .supplierId(id)
+                            .supplierName(supplier.getName())
+                            .totalProducts(total)
+                            .activeProducts(active)
+                            .inactiveProducts(inactive)
+                            .createdAt(supplier.getCreatedAt())
+                            .updatedAt(supplier.getUpdatedAt())
+                            .lastSuppliedItemName(lastProduct.map(Product::getName).orElse(null))
+                            .lastSuppliedItemDate(lastProduct.map(Product::getCreatedAt).orElse(null))
+                            .build();
+                })
+                .collect(java.util.stream.Collectors.toList());
     }
 
     private void validateSupplierName(String name, Long supplierId) {

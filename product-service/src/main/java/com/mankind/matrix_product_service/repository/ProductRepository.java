@@ -4,8 +4,10 @@ import com.mankind.matrix_product_service.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,5 +27,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // Products by supplier
     Page<Product> findBySuppliers_IdAndIsActiveTrue(Long supplierId, Pageable pageable);
+
+    // Last supplied item per supplier
+    Optional<Product> findTopBySuppliers_IdOrderByCreatedAtDesc(Long supplierId);
+
+    // Admin summary: all suppliers with their product counts and last product in one query
+    @Query("SELECT p FROM Product p JOIN p.suppliers s WHERE s.id = :supplierId ORDER BY p.createdAt DESC")
+    List<Product> findAllBySupplierIdOrderByCreatedAtDesc(Long supplierId);
 }
 

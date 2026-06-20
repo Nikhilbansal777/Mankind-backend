@@ -34,4 +34,10 @@ public class SupplierDashboardDTO {
 
     @Schema(description = "When the supplier record was last updated")
     private LocalDateTime updatedAt;
+
+    @Schema(description = "Name of the most recently linked product", example = "Wireless Headphones")
+    private String lastSuppliedItemName;
+
+    @Schema(description = "Date when the most recent product was linked to this supplier")
+    private LocalDateTime lastSuppliedItemDate;
 }

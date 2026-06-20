@@ -22,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/suppliers")
 @RequiredArgsConstructor
@@ -119,6 +121,17 @@ public class SupplierController {
             @PathVariable Long id) {
         supplierService.deleteSupplier(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Get admin summary for all suppliers", description = "Returns dashboard metrics for all active suppliers in one call")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved admin summary",
+                content = @Content(schema = @Schema(implementation = SupplierDashboardDTO.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/admin-summary")
+    public ResponseEntity<List<SupplierDashboardDTO>> getAdminSummary() {
+        return ResponseEntity.ok(supplierService.getAdminSummary());
     }
 
     @Operation(summary = "Get supplier dashboard", description = "Retrieves dashboard metrics for a supplier including product counts")
