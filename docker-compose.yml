@@ -12,6 +12,9 @@ services:
       KC_DB_USERNAME: ${DB_USERNAME}
       KC_DB_PASSWORD: ${DB_PASSWORD}
       KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: ${KEYCLOAK_HTTP_PORT:-8180}
       KC_HTTP_ENABLED: "true"
       KC_HTTPS_ENABLED: "false"
       JAVA_TOOL_OPTIONS: >-
@@ -49,9 +52,10 @@ services:
       JAVA_OPTS: "-Xms128m -Xmx1024m -XX:MaxMetaspaceSize=384m"
       SPRING_MAIN_LAZY_INITIALIZATION: "true"
       LOGGING_LEVEL_ROOT: warn
-      # Keycloak inside Docker network (login/register); JWT issuer stays host URL from .env
+      # Keycloak: token/admin API on Docker network; JWT issuer must match token `iss` (browser URL)
       KEYCLOAK_ADMIN_URL: http://keycloak:8080
-      KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL:-http://host.docker.internal:8180}
+      KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL:-http://localhost:8180}
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/realms/mankind/protocol/openid-connect/certs
       USER_SERVICE_URL: http://127.0.0.1:8085
       PRODUCT_SERVICE_URL: http://127.0.0.1:8085
       CART_SERVICE_URL: http://127.0.0.1:8085
@@ -75,7 +79,8 @@ services:
       start_period: 120s
     restart: unless-stopped
     depends_on:
-      - keycloak
+      keycloak:
+        condition: service_healthy
 
 networks:
   mankind-network:

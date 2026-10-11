@@ -1,11 +1,15 @@
 package com.mankind.mankindmatrixuserservice.service;
 
+import com.mankind.mankindmatrixuserservice.exception.InvalidLoginException;
+import com.mankind.mankindmatrixuserservice.exception.KeycloakUnavailableException;
 import com.mankind.mankindmatrixuserservice.model.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -50,7 +54,14 @@ public class KeycloakTokenService {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(formData)
             .retrieve()
-            .bodyToMono(TokenResponse.class);
+            .bodyToMono(TokenResponse.class)
+            .onErrorMap(WebClientResponseException.Unauthorized.class,
+                    ex -> new InvalidLoginException("Invalid username or password"))
+            .onErrorMap(WebClientResponseException.BadRequest.class,
+                    ex -> new InvalidLoginException("Login failed: check credentials and Keycloak client configuration"))
+            .onErrorMap(WebClientRequestException.class,
+                    ex -> new KeycloakUnavailableException(
+                            "Cannot reach Keycloak at " + serverUrl + ". Is it running?", ex));
     }
 
     public Mono<Void> revokeRefreshToken(String refreshToken) {

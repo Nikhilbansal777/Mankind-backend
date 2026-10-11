@@ -36,7 +36,8 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URL:${KEYCLOAK_URL:http://localhost:8180}}/realms/mankind
-          jwk-set-uri: ${KEYCLOAK_ISSUER_URL:${KEYCLOAK_URL:http://localhost:8180}}/realms/mankind/protocol/openid-connect/certs
+          # In Docker, fetch JWKS from Keycloak on the internal network (issuer URL stays the browser-facing host)
+          jwk-set-uri: ${KEYCLOAK_JWK_SET_URI:${KEYCLOAK_ISSUER_URL:${KEYCLOAK_URL:http://localhost:8180}}/realms/mankind/protocol/openid-connect/certs}
   jpa:
     hibernate:
       ddl-auto: update
