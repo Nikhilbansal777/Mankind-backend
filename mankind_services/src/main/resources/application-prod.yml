@@ -1,0 +1,11 @@
+server:
+  port: ${SERVER_PORT:8085}
+
+spring:
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    root: warn
+    com.mankind: info

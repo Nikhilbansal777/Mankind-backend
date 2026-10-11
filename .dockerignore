@@ -1,48 +1,6 @@
-# Git
-.git
-.gitignore
-.gitattributes
-
-# Maven
-target/
-**/target/
-.mvn/
-mvnw
-mvnw.cmd
-
-# IDE
-.idea/
-*.iml
-.vscode/
-.project
-.classpath
-.settings/
-
-# Environment files
-# Allow .env files to be copied
-# .env
-# .env.*
-# !.env.example
-
-# Logs
-logs/
-*.log
-
-# OS specific
-.DS_Store
-Thumbs.db
-
-# Docker
-.docker/
-docker-compose*.yml
-Dockerfile*
-
-# Documentation
-**/docs/
-README.md
-LICENSE
-
-# Test files
-**/test/
-**/tests/
-**/postman/ 
+**/.env
+**/.git
+**/target
+**/.idea
+**/*.iml
+**/node_modules

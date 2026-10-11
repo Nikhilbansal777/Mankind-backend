@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:8085
+@token = {{login.response.body.accessToken}}
+
+### Login (sets token for requests below)
+# @name login
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "username": "sampleUser",
+  "password": "secret1234"
+}
+
+### Health
+GET {{baseUrl}}/actuator/health
+
+### Products (public)
+GET {{baseUrl}}/api/v1/products?page=0&size=10
+
+### Cart (authenticated)
+GET {{baseUrl}}/api/v1/cart
+Authorization: Bearer {{token}}
+
+### Coupons (authenticated)
+GET {{baseUrl}}/api/v1/coupons
+Authorization: Bearer {{token}}
+
+### Wishlist (authenticated)
+GET {{baseUrl}}/api/v1/wishlist
+Authorization: Bearer {{token}}
+
+### Current user profile
+GET {{baseUrl}}/api/v1/users/me
+Authorization: Bearer {{token}}
+
+### Orders (authenticated)
+GET {{baseUrl}}/api/v1/orders
+Authorization: Bearer {{token}}
+
+### Referrals (authenticated)
+GET {{baseUrl}}/api/v1/referrals
+Authorization: Bearer {{token}}

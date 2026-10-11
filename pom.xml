@@ -1,30 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.mankind</groupId>
   <artifactId>mankind-backend</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
-  <name>Mankind Backend Monorepo</name>
-  <description>Multi-module Spring Boot backend for Mankind Matrix</description>
+  <name>Mankind Backend</name>
+  <description>Unified Spring Boot backend for Mankind Matrix</description>
   <modules>
-    <module>user-service</module>
-    <module>product-service</module>
-    <module>cart-service</module>
-    <module>wishlist-service</module>
-    <module>payment-service</module>
-    <module>mankind-gateway-service</module>
-    <module>notification-service</module>
-    <module>coupon-service</module>
-    <module>order-service</module>
-    <module>referral-service</module>
-    <module>corporate-auth-service</module>
-    <!--  api modules -->
-    <module>user-api</module>
-    <module>product-api</module>
-    <module>cart-api</module>
-    <module>coupon-api</module>
-    <module>payment-api</module>
-
+    <module>mankind_services</module>
   </modules>
   <properties>
     <java.version>17</java.version>
@@ -52,43 +38,16 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>com.mankind</groupId>
-        <artifactId>user-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.mankind</groupId>
-        <artifactId>product-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.mankind</groupId>
-        <artifactId>cart-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.mankind</groupId>
-        <artifactId>coupon-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.mankind</groupId>
-        <artifactId>payment-api</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
         <scope>provided</scope>
       </dependency>
-      <!-- SpringDoc OpenAPI Dependencies -->
       <dependency>
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         <version>${springdoc.version}</version>
       </dependency>
-      <!-- MapStruct Dependencies -->
       <dependency>
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
