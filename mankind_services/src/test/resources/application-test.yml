@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:mankind_test;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+keycloak:
+  auth-server-url: http://localhost:8180
+  admin-user: admin
+  admin-password: admin
+
+stripe:
+  secret-key: sk_test_placeholder
+
+USER_SERVICE_URL: http://127.0.0.1:8085
+PRODUCT_SERVICE_URL: http://127.0.0.1:8085
+CART_SERVICE_URL: http://127.0.0.1:8085
+COUPON_SERVICE_URL: http://127.0.0.1:8085
+PAYMENT_SERVICE_URL: http://127.0.0.1:8085
+
+logging:
+  level:
+    root: warn

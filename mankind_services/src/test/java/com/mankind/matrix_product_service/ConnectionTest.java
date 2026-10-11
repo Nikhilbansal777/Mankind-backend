@@ -2,13 +2,15 @@ package com.mankind.matrix_product_service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConnectionTest {
-    
+
     @Test
+    @Disabled("Manual check only — requires live MySQL from root .env")
     public void testDatabaseConnection() {
         // Load environment variables from .env file
         Dotenv dotenv = Dotenv.load();
