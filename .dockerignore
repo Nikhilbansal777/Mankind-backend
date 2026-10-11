@@ -1,6 +1,25 @@
+# Secrets and local config
 **/.env
+**/.env.*
+!.env.example
+
+# VCS and IDE
 **/.git
-**/target
+**/.gitignore
 **/.idea
 **/*.iml
+
+# Build outputs
+**/target
+
+# Not needed to compile mankind_services
+docs
+scripts
+keycloak
+README.md
+**/*.md
+docker-compose.yml
+.dockerignore
+
+# Misc
 **/node_modules
