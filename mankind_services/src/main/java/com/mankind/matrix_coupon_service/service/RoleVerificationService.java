@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-@Service
+@Service("couponRoleVerificationService")
 @RequiredArgsConstructor
 @Slf4j
 public class RoleVerificationService {

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
+@RestControllerAdvice(name = "orderExceptionHandler", basePackages = "com.mankind.matrix_order_service")
 @Slf4j
 public class GlobalExceptionHandler {
 

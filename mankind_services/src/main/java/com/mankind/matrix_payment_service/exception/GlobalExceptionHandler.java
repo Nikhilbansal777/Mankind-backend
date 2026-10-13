@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(name = "paymentExceptionHandler", basePackages = "com.mankind.matrix_payment_service")
 @Slf4j
 public class GlobalExceptionHandler {
 

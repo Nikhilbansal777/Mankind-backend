@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-@RestControllerAdvice
+@RestControllerAdvice(name = "userExceptionHandler", basePackages = "com.mankind.mankindmatrixuserservice")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)

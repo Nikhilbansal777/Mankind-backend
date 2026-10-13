@@ -16,20 +16,32 @@ COPY mankind_services/src mankind_services/src
 RUN --mount=type=cache,target=/root/.m2 \
     mvn -B -pl mankind_services -am package -DskipTests -q
 
-FROM build AS extract
-RUN java -Djarmode=tools -jar mankind_services/target/mankind_services-*.jar extract --layers --destination /build/extracted
+# FROM build AS extract
+# RUN java -Djarmode=tools -jar mankind_services/target/mankind_services-*.jar extract --layers --destination /build/extracted
 
+# FROM eclipse-temurin:17-jre AS runtime
+# WORKDIR /app
+
+# COPY --from=extract /build/extracted/dependencies/ ./
+# COPY --from=extract /build/extracted/spring-boot-loader/ ./
+# COPY --from=extract /build/extracted/snapshot-dependencies/ ./
+# COPY --from=extract /build/extracted/application/ ./
+
+# ENV JAVA_OPTS="-Xms256m -Xmx1024m"
+# ENV SERVER_PORT=8085
+
+# EXPOSE 8085
+
+# ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -cp . org.springframework.boot.loader.launch.JarLauncher"]
 FROM eclipse-temurin:17-jre AS runtime
+
 WORKDIR /app
 
-COPY --from=extract /build/extracted/dependencies/ ./
-COPY --from=extract /build/extracted/spring-boot-loader/ ./
-COPY --from=extract /build/extracted/snapshot-dependencies/ ./
-COPY --from=extract /build/extracted/application/ ./
+COPY --from=build /build/mankind_services/target/mankind_services-1.0.0.jar /app/app.jar
 
 ENV JAVA_OPTS="-Xms256m -Xmx1024m"
 ENV SERVER_PORT=8085
 
 EXPOSE 8085
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS org.springframework.boot.loader.launch.JarLauncher"]
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /app/app.jar"]

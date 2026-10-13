@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(name = "couponExceptionHandler", basePackages = "com.mankind.matrix_coupon_service")
 @Slf4j
 public class GlobalExceptionHandler {
 
