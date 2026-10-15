@@ -64,6 +64,7 @@ public class InventoryService {
         return inventoryMapper.toResponseDTO(inventory);
     }
 
+    @Transactional(readOnly = true)
     public InventoryResponseDTO getInventoryByProductId(Long productId) {
         return inventoryRepository.findByProductId(productId)
                 .map(inventoryMapper::toResponseDTO)

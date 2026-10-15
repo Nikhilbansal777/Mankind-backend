@@ -6,8 +6,14 @@ import com.mankind.matrix_cart_service.model.CartStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,8 +22,17 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ContextConfiguration(classes = CartRepositoryTest.JpaConfig.class)
 @ActiveProfiles("test")
 public class CartRepositoryTest {
+
+    @Configuration(proxyBeanMethods = false)
+    @EntityScan(basePackageClasses = Cart.class)
+    @EnableJpaRepositories(basePackageClasses = CartRepository.class)
+    @EnableJpaAuditing
+    static class JpaConfig {
+    }
 
     @Autowired
     private TestEntityManager entityManager;

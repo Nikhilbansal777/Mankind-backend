@@ -17,7 +17,7 @@ RUN --mount=type=cache,target=/root/.m2 \
     mvn -B -pl mankind_services -am package -DskipTests -q
 
 FROM build AS extract
-RUN java -Djarmode=tools -jar mankind_services/target/mankind_services-*.jar extract --layers --destination /build/extracted
+RUN java -Djarmode=tools -jar mankind_services/target/mankind_services-*.jar extract --layers --launcher --destination /build/extracted
 
 FROM eclipse-temurin:17-jre AS runtime
 WORKDIR /app

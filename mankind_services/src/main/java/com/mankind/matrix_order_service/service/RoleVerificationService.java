@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import feign.FeignException;
 
-@Service
+@Service("orderRoleVerificationService")
 @RequiredArgsConstructor
 @Slf4j
 public class RoleVerificationService {

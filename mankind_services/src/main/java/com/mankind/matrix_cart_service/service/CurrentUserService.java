@@ -5,7 +5,7 @@ import com.mankind.matrix_cart_service.client.UserClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("cartCurrentUserService")
 @RequiredArgsConstructor
 public class CurrentUserService {
     private final UserClient userClient;

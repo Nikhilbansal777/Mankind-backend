@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(name = "referralExceptionHandler", basePackages = "com.mankind.matrix_referral_service")
 @Slf4j
 public class GlobalExceptionHandler {
 

@@ -13,7 +13,7 @@ import java.util.Map;
 import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice(name = "productExceptionHandler", basePackages = "com.mankind.matrix_product_service")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
