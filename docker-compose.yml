@@ -16,6 +16,8 @@ services:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_PORT: ${KEYCLOAK_HTTP_PORT:-8180}
       KC_HTTP_ENABLED: "true"
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
       KC_HTTPS_ENABLED: "false"
       JAVA_TOOL_OPTIONS: >-
         -XX:InitialRAMPercentage=10
@@ -28,7 +30,15 @@ services:
     networks:
       - mankind-network
     healthcheck:
-      disable: true
+      test:
+        - CMD
+        - bash
+        - -ec
+        - "{ printf 'HEAD /health/ready HTTP/1.0\\r\\n\\r\\n' >&0; grep -qE '^HTTP/1\\.[01] 200'; } 0<>/dev/tcp/127.0.0.1/9000"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   mankind_services:
@@ -76,7 +86,7 @@ services:
     restart: unless-stopped
     depends_on:
       keycloak:
-        condition: service_started
+        condition: service_healthy
 
 networks:
   mankind-network:
