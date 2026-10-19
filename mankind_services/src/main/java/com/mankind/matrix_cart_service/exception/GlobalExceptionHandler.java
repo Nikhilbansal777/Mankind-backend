@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import feign.FeignException;
 
-@ControllerAdvice
+@ControllerAdvice(name = "cartExceptionHandler", basePackages = "com.mankind.matrix_cart_service")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)

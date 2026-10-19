@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+@Service("orderPaymentService")
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentService {

@@ -51,22 +51,26 @@ public class ProductService {
         return productMapper.toResponseDTO(product);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponseDTO> getAllProducts(Pageable pageable) {
         return productRepository.findByIsActiveTrue(pageable)
                 .map(productMapper::toResponseDTO);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponseDTO getProductById(Long id) {
         return productRepository.findByIdAndIsActiveTrue(id)
                 .map(productMapper::toResponseDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponseDTO> getProductsByCategory(Long categoryId, Pageable pageable) {
         return productRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable)
                 .map(productMapper::toResponseDTO);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponseDTO> getFeaturedProducts(Pageable pageable) {
         return productRepository.findByIsFeaturedTrueAndIsActiveTrue(pageable)
                 .map(productMapper::toResponseDTO);
