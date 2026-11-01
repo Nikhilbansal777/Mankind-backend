@@ -119,17 +119,20 @@ public class UserService {
         kcAdmin.resetPassword(user.getKeycloakId(), request.getNewPassword(), temporary);
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public UserDTO getUserById(Long id) {
         return userRepository.findById(id)
                 .map(userMapper::toDto)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public Page<UserDTO> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
                 .map(userMapper::toDto);
     }
 
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public List<UserDTO> getUsersByIds(List<Long> userIds) {
         return userRepository.findAllById(userIds).stream()
                 .map(userMapper::toDto)

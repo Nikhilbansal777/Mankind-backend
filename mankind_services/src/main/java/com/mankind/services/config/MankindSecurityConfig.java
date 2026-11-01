@@ -72,6 +72,9 @@ public class MankindSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:3000",
+                "https://matrix-ai.mindstack-technologies.com",
+                "https://mankindmatrixai.com",
+                "https://www.mankindmatrixai.com",
                 "http://localhost:8085",
                 "http://127.0.0.1:8085",
                 "http://localhost:8080"

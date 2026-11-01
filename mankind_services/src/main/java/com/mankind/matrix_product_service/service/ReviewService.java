@@ -61,7 +61,7 @@ public class ReviewService {
         List<UserDTO> users = List.of();
         try {
             users = userClient.getUsersByIds(userIds);
-        } catch (FeignException.Unauthorized | FeignException.Forbidden | org.springframework.web.server.ResponseStatusException e) {
+        } catch (FeignException.Unauthorized | FeignException.Forbidden | org.springframework.web.server.ResponseStatusException | com.mankind.matrix_order_service.exception.AccessDeniedException e) {
             userInfoAvailableTmp = false;
         }
         final boolean userInfoAvailable = userInfoAvailableTmp;
