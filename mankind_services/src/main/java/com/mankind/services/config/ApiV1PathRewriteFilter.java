@@ -119,6 +119,10 @@ public class ApiV1PathRewriteFilter extends OncePerRequestFilter {
             return "/orders/" + path.substring("/api/v1/orders/".length());
         }
 
+        if (path.startsWith("/api/v1/")) {
+            return path.substring("/api/v1".length());
+        }
+
         return path;
     }
 }
