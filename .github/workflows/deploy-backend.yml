@@ -1,0 +1,64 @@
+name: Deploy backend to VPS
+
+# Runs on every push to main (i.e. every merged PR) and can also be started by hand.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two deployments at the same time.
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Configure SSH
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Pull, rebuild and health-check on the VPS (rolls back on failure)
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o BatchMode=yes "$VPS_USER@$VPS_HOST" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          cd ~/Mankind-backend
+
+          PREV=$(git rev-parse HEAD)
+          git fetch --prune origin main
+          git checkout -f -B main origin/main
+          echo "Deploying $PREV -> $(git rev-parse HEAD)"
+
+          docker compose up -d --build
+
+          echo "Waiting for the app to become healthy..."
+          for i in $(seq 1 40); do
+            if curl -fsS http://localhost:8085/actuator/health | grep -q '^{"status":"UP"'; then
+              echo "Healthy."
+              docker image prune -f > /dev/null
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "Health check failed - rolling back to $PREV"
+          git checkout -f "$PREV"
+          docker compose up -d --build
+          exit 1
+          REMOTE
