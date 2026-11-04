@@ -1,0 +1,77 @@
+name: Deploy backend to VPS
+
+# Runs on every push to main (i.e. every merged PR) and can also be started by hand.
+# It deploys the repository it runs in, so a test copy of the repo deploys its own code.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two deployments at the same time.
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    # Only ever deploy main, even if started by hand from another branch.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Configure SSH
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Pull, rebuild and health-check on the VPS (rolls back on failure)
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          REPO_URL: https://github.com/${{ github.repository }}.git
+          BRANCH: main
+        run: |
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" -o BatchMode=yes "$VPS_USER@$VPS_HOST" "bash -s -- '$REPO_URL' '$BRANCH'" <<'REMOTE'
+          set -euo pipefail
+          REPO_URL="$1"
+          BRANCH="$2"
+          [[ "$REPO_URL" =~ ^https://github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+\.git$ ]] || { echo "Unexpected repository URL"; exit 1; }
+          [[ "$BRANCH" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "Unexpected branch name"; exit 1; }
+
+          cd ~/Mankind-backend
+          PREV=$(git rev-parse HEAD)
+          git fetch --prune "$REPO_URL" "$BRANCH"
+          git checkout -f -B main FETCH_HEAD
+          echo "Deploying $PREV -> $(git rev-parse HEAD) from $REPO_URL ($BRANCH)"
+
+          if ! docker compose up -d --build; then
+            echo "Build or start failed - restoring the previous code ($PREV)"
+            git checkout -f "$PREV"
+            exit 1
+          fi
+
+          echo "Waiting for the app to become healthy..."
+          for i in $(seq 1 40); do
+            if curl -fsS http://localhost:8085/actuator/health | grep -q '^{"status":"UP"'; then
+              echo "Healthy."
+              docker image prune -f > /dev/null
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "Health check failed - rolling back to $PREV"
+          git checkout -f "$PREV"
+          docker compose up -d --build
+          exit 1
+          REMOTE
